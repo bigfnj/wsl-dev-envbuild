@@ -64,6 +64,17 @@ The inventory lives in [`manifest/tools.json`](manifest/tools.json) — the sour
 of truth agents consult before installing anything. Agent rules:
 [`docs/agent-rules.md`](docs/agent-rules.md).
 
+### Agents auto-discover the environment
+
+The bootstrap writes a marker-fenced block into `~/AGENTS.md` and `~/CLAUDE.md`
+(machine-wide — Codex and Claude walk up to `$HOME`). So every AI session reads,
+up front: this machine is provisioned by wsl-dev-envbuild; run `devtools report`
+/ `devtools check` / `smoke-test` before installing; follow the uv/pnpm and
+global-vs-local rules. The block is idempotent and uses distinct markers, so it
+coexists with the AI Context Runner extension's own injected blocks. A good way
+to confirm: ask the agent *"run `devtools report` and summarize what's
+installed."*
+
 ## Layout
 
 This repo:

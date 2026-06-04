@@ -111,6 +111,11 @@ main() {
     local g
     for g in "${groups[@]}"; do run_group "$g"; done
 
+    # Materialize machine-wide agent-discovery files (AGENTS.md / CLAUDE.md) so
+    # AI agents learn the environment and check it before installing.
+    log_group "agent discovery"
+    write_agent_discovery
+
     log_group "done"
     log_ok "bootstrap complete — run 'devtools report' for the inventory"
 }

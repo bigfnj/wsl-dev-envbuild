@@ -108,6 +108,62 @@ ensure_line() {
     fi
 }
 
+# ensure_block <file> <marker> <body> — idempotently maintain an HTML-comment
+# marker-fenced block in a file, replacing it in place if present (preserving
+# everything else) or appending it if absent. Distinct markers mean our block
+# coexists with other tools' blocks in the same file (e.g. the AI Context Runner
+# extension's AI_CTX block in AGENTS.md). Body may be multi-line.
+ensure_block() {
+    local file="$1" marker="$2" body="$3"
+    local start="<!-- ${marker}_START -->" end="<!-- ${marker}_END -->"
+    ensure_dir "$(dirname "$file")"
+    [ -f "$file" ] || : > "$file"
+    local bf tmp; bf="$(mktemp)"; tmp="$(mktemp)"
+    printf '%s\n' "$body" > "$bf"
+    if grep -qF "$start" "$file"; then
+        backup_file "$file"
+        # Replace in place: keep start/end, swap the body between them.
+        awk -v s="$start" -v e="$end" -v bf="$bf" '
+            $0==s { print; while ((getline l < bf) > 0) print l; close(bf); inblk=1; next }
+            $0==e { inblk=0; print; next }
+            inblk!=1 { print }
+        ' "$file" > "$tmp"
+    else
+        { cat "$file"; printf '\n%s\n' "$start"; cat "$bf"; printf '%s\n' "$end"; } > "$tmp"
+    fi
+    mv "$tmp" "$file"; rm -f "$bf"
+    log_ok "agent block [$marker] -> $file"
+}
+
+# Materialize machine-wide agent-discovery files so any AI agent (Codex reads
+# AGENTS.md, Claude reads CLAUDE.md, walking up to $HOME) learns the environment
+# and is told to inspect it before installing. Marker-fenced + idempotent, so it
+# coexists with the AI Context Runner extension's own injected blocks.
+write_agent_discovery() {
+    local body
+    body="$(cat <<EOF
+# Dev environment — wsl-dev-envbuild (machine-wide)
+
+This machine is provisioned by wsl-dev-envbuild (repo: $REPO_ROOT).
+
+BEFORE installing anything, inspect what is already here:
+  - \`devtools report\`  — full tool inventory
+  - \`devtools check\`   — verify everything is present
+  - \`smoke-test\`       — exercise the toolchain end-to-end
+The environment is broad; the tool you need is probably already installed.
+
+Conventions (full rules: $REPO_ROOT/docs/agent-rules.md):
+- Python: project deps via \`uv\` in a .venv; global CLIs via pipx; never system pip.
+- Node: project deps via pnpm + local node_modules; only pnpm/tsx are global.
+- Heavy/risky work (ML/CUDA, untrusted binaries) -> containers, not the base system.
+- Work under ~/projects (Linux filesystem), never /mnt/c.
+- Inventory of record: $REPO_ROOT/manifest/tools.json
+EOF
+)"
+    ensure_block "$HOME/AGENTS.md" "DEVENV_RULES" "$body"
+    ensure_block "$HOME/CLAUDE.md" "DEVENV_RULES" "$body"
+}
+
 # ── Manifest ──────────────────────────────────────────────────────────────────
 # manifest_add name binary group scope install_method detect status [notes]
 # Upserts by name into manifest/tools.json (the agent-discoverable inventory).
