@@ -12,8 +12,8 @@ A single git repo reproduces a complete WSL2 Debian development workstation in
 one command:
 
 ```bash
-git clone git@github.com:bigfnj/myai.git
-cd myai/wsl-dev-envbuild
+git clone git@github.com:bigfnj/wsl-dev-envbuild.git
+cd wsl-dev-envbuild
 ./bootstrap.sh
 ```
 

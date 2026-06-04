@@ -6,8 +6,8 @@ modernization, reverse engineering, image/media, office/PDF, data science, web
 research) provisioned from one command.
 
 ```bash
-git clone git@github.com:bigfnj/myai.git
-cd myai/wsl-dev-envbuild
+git clone git@github.com:bigfnj/wsl-dev-envbuild.git
+cd wsl-dev-envbuild
 ./bootstrap.sh
 ```
 
