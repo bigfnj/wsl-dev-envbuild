@@ -31,27 +31,10 @@ node_runtime() {
     apt_install nodejs
 }
 
-# Route global npm installs to ~/.local (user-owned), then install pnpm + tsx.
+# pnpm + tsx via the shared npm_global helper (user prefix ~/.local, no sudo).
 node_global_tools() {
-    if [ "$(npm config get prefix)" != "$HOME/.local" ]; then
-        npm config set prefix "$HOME/.local"
-        log_ok "npm global prefix -> ~/.local (user-owned, no sudo)"
-    else
-        log_skip "npm global prefix already ~/.local"
-    fi
-    node_npm_global pnpm   # fast, disk-efficient package manager (preferred)
-    node_npm_global tsx    # run .ts files directly, no build step
-}
-
-# node_npm_global <pkg> [binary] — install a global npm CLI idempotently.
-node_npm_global() {
-    local pkg="$1" bin="${2:-$1}"
-    if has "$bin"; then
-        log_skip "npm -g: $pkg already present ($bin)"
-        return 0
-    fi
-    log_info "npm install -g $pkg"
-    npm install -g "$pkg"
+    npm_global pnpm   # fast, disk-efficient package manager (preferred)
+    npm_global tsx    # run .ts files directly, no build step
 }
 
 node_record_manifest() {

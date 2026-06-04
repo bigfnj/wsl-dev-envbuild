@@ -680,5 +680,82 @@
     "status": "core",
     "notes": "NSA RE suite; GUI via 'ghidra', headless via 'ghidra-headless'",
     "last_verified": "2026-06-04"
+  },
+  {
+    "name": "duckdb",
+    "binary": "duckdb",
+    "group": "data",
+    "scope": "global",
+    "install_method": "github-zip",
+    "detect": "duckdb --version",
+    "status": "core",
+    "notes": "in-process analytical SQL over CSV/Parquet/JSON",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "sqlite-utils",
+    "binary": "sqlite-utils",
+    "group": "data",
+    "scope": "global",
+    "install_method": "pipx",
+    "detect": "sqlite-utils --version",
+    "status": "core",
+    "notes": "SQLite CLI + automation",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "csvkit",
+    "binary": "csvlook",
+    "group": "data",
+    "scope": "global",
+    "install_method": "pipx",
+    "detect": "csvlook --version",
+    "status": "core",
+    "notes": "CSV inspection/conversion (csvlook, csvcut, …)",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "pandoc",
+    "binary": "pandoc",
+    "group": "docs",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "pandoc --version",
+    "status": "core",
+    "notes": "universal document converter",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "markdownlint-cli",
+    "binary": "markdownlint",
+    "group": "docs",
+    "scope": "global",
+    "install_method": "npm-user",
+    "detect": "markdownlint --version",
+    "status": "core",
+    "notes": "markdown linter for docs",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "imagemagick",
+    "binary": "magick",
+    "group": "image",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "magick --version",
+    "status": "core",
+    "notes": "image manipulation/conversion",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "ffmpeg",
+    "binary": "ffmpeg",
+    "group": "image",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "ffmpeg -version",
+    "status": "core",
+    "notes": "audio/video transcoding",
+    "last_verified": "2026-06-04"
   }
 ]

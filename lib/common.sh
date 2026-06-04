@@ -62,6 +62,24 @@ pipx_install() {
     pipx install "$pkg"
 }
 
+# npm_global <package> [binary] — install a global npm CLI into a USER prefix
+# (~/.local) so there's no sudo and no /usr global-modules pollution; the bin
+# reuses the ~/.local/bin PATH entry. Ensures the prefix once, idempotent.
+npm_global() {
+    local pkg="$1" bin="${2:-$1}"
+    has npm || { log_err "npm not installed; cannot npm_global $pkg"; return 1; }
+    if [ "$(npm config get prefix)" != "$HOME/.local" ]; then
+        npm config set prefix "$HOME/.local"
+        log_ok "npm global prefix -> ~/.local (user-owned, no sudo)"
+    fi
+    if has "$bin"; then
+        log_skip "npm -g: $pkg already present ($bin)"
+        return 0
+    fi
+    log_info "npm install -g $pkg"
+    npm install -g "$pkg"
+}
+
 # ── Filesystem / shell config ─────────────────────────────────────────────────
 ensure_dir() { [ -d "$1" ] && return 0; mkdir -p "$1"; log_ok "mkdir $1"; }
 
