@@ -548,5 +548,137 @@
     "status": "core",
     "notes": ".NET SDK via Microsoft feed",
     "last_verified": "2026-06-04"
+  },
+  {
+    "name": "radare2",
+    "binary": "r2",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "github-deb",
+    "detect": "r2 -v",
+    "status": "core",
+    "notes": "RE framework (official .deb)",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "binwalk",
+    "binary": "binwalk",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "command -v binwalk",
+    "status": "core",
+    "notes": "firmware/binary extraction",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "exiftool",
+    "binary": "exiftool",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "exiftool -ver",
+    "status": "core",
+    "notes": "metadata inspection",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "tshark",
+    "binary": "tshark",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "tshark --version",
+    "status": "core",
+    "notes": "CLI packet analysis (Wireshark GUI: Windows)",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "p7zip",
+    "binary": "7z",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "command -v 7z",
+    "status": "core",
+    "notes": "archive inspection/extraction",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "foremost",
+    "binary": "foremost",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "command -v foremost",
+    "status": "core",
+    "notes": "file carving from raw data",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "xxd",
+    "binary": "xxd",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "command -v xxd",
+    "status": "core",
+    "notes": "hex viewer/editor",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "hexdump",
+    "binary": "hexdump",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "command -v hexdump",
+    "status": "core",
+    "notes": "hex dump (bsdextrautils)",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "file",
+    "binary": "file",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "file --version",
+    "status": "core",
+    "notes": "file-type identification",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "dosbox-x",
+    "binary": "dosbox-x",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "command -v dosbox-x",
+    "status": "core",
+    "notes": "DOS emulator; run headless via dosbox-x-headless",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "frida",
+    "binary": "frida",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "pipx",
+    "detect": "frida --version",
+    "status": "core",
+    "notes": "dynamic instrumentation",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "ghidra",
+    "binary": "ghidra",
+    "group": "reverse",
+    "scope": "global",
+    "install_method": "github-zip",
+    "detect": "command -v ghidra",
+    "status": "core",
+    "notes": "NSA RE suite; GUI via 'ghidra', headless via 'ghidra-headless'",
+    "last_verified": "2026-06-04"
   }
 ]
