@@ -129,7 +129,13 @@ managers manage their own (e.g. `~/.cargo/bin`).
 
 ## Extending
 
-Add a tool to the right `modules/<group>.sh` (guard it with `has`), record it
-with `manifest_add`, and run `devtools check`. To add a whole new group, drop a
-`modules/<name>.sh` defining `<name>_desc` and `<name>_install`, and add it to
-the group list in `bootstrap.sh`.
+**Add a tool** (full step-by-step in [`docs/agent-rules.md`](docs/agent-rules.md)):
+edit the right `modules/<group>.sh` — install it in `*_install` (guarded with
+`has`) and record it in `*_record_manifest` (`manifest_add …`, guarded with
+`if has <bin>`); then **run `./bootstrap.sh --only <group>`** to install it and
+regenerate the manifest (never hand-edit `manifest/tools.json`); then
+`devtools check`; then commit + push so other machines get it via
+`git pull && ./bootstrap.sh`.
+
+**Add a whole new group:** drop a `modules/<name>.sh` defining `<name>_desc` and
+`<name>_install`, and add `<name>` to the group list in `bootstrap.sh`.

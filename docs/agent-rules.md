@@ -42,12 +42,33 @@ global-install rot, and rediscovery this environment exists to avoid.
 
 ## When you do add a tool
 
-1. Put it in the correct `modules/<group>.sh`, guarded with `has` so re-runs
-   skip it.
-2. Use the right channel: `apt_install` (system), `pipx_install` (global Python
-   CLI), `npm_global` (global Node CLI), or a guarded download to `~/tools/bin`.
-3. Add a `manifest_add` entry so `devtools` and the next agent can see it.
-4. Run `devtools check` to confirm no drift.
+Never install ad hoc and never hand-edit `manifest/tools.json` — the manifest is
+*generated* by each module. Follow this so a re-run and other machines stay
+consistent:
+
+1. **Confirm it's missing:** `devtools report` / `devtools check`.
+2. **Edit the right `modules/<group>.sh`** (add a whole new group only if none
+   fits — see the README "Extending" section):
+   - Install it in the group's `*_install`, guarded with `has`, via the correct
+     channel: `apt_install <pkg>` (system) · `pipx_install <pkg>` (global Python
+     CLI) · `npm_global <pkg>` (global Node CLI) · or a guarded download into
+     `~/tools/bin`.
+   - Record it in the group's `*_record_manifest`, guarded with `if has <bin>`:
+     ```
+     manifest_add <name> <binary> <group> <scope> <install_method> "<detect>" <status> "<notes>"
+     ```
+     `scope` = `global` | `project-local` | `container`;
+     `status` = `core` | `optional` | `experimental` | `isolated`;
+     `detect` = a command that exits 0 when the tool works (usually
+     `<bin> --version`; use `command -v <bin>` if it has no version flag).
+3. **Apply it:** `./bootstrap.sh --only <group>` — this installs the tool AND
+   regenerates the manifest. Editing the module without running it leaves the
+   manifest stale and `devtools check` will report drift.
+4. **Verify:** `devtools check` (no drift); run `smoke-test` if it's worth
+   exercising end-to-end.
+5. **Commit + push** so other workstations get it:
+   `git add -A && git commit && git push`. Other machines pick it up with
+   `git pull && ./bootstrap.sh`.
 
 ## Don't
 
