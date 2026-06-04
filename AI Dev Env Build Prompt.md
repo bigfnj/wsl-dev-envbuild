@@ -289,58 +289,81 @@ Consider the following tools and ecosystems as candidates. You may add, remove, 
 - gcc
 - g++
 - clang
-- lldb
 - gdb
+- lldb
 - valgrind
 - strace
-- ltrace
 - ripgrep
 - fd-find
+- fzf
+- bat
+- delta
 - jq
 - yq
 - tree
+- sqlite3
+- tmux
+- entr
+- tokei
 - htop / btop
 - shellcheck
 - shfmt
+- socat
+
+Notes:
+- `ltrace` removed — niche, not needed day-to-day
+- `bat` replaces plain `cat` for file reading — syntax highlighting is essential for agents parsing source
+- `delta` replaces the default git diff pager — makes diffs readable at a glance
+- `fzf` is used constantly for fuzzy file/history search in agent-driven shell workflows
+- `tmux` allows long-running agent tasks to survive disconnections
+- `entr` re-runs commands when files change — lightweight watch without a build system
+- `tokei` gives fast language/LOC breakdown of any codebase — agents use this to orient on first open
+- `socat` for ad-hoc socket/pipe debugging
+- `sqlite3` CLI should be globally available — it underpins many lightweight data tools
 
 ## Python
 
-- Python 3
-- pip
+- Python 3 (system, managed by Debian)
+- pip (system only — project work uses uv)
 - venv
-- pipx
-- uv
-- poetry if justified
-- ruff
-- black
+- pyenv (for managing multiple Python versions — legacy code work often needs older runtimes)
+- pipx (global Python CLI tools only)
+- uv (primary project dependency manager — replaces pip, venv, and poetry for new projects)
+- ruff (linting + formatting — replaces black and flake8)
 - pytest
 - mypy
 - ipython
 - jupyterlab
 
+Notes:
+- `poetry` removed — uv covers all its use cases with better performance and simpler model
+- `black` removed — ruff format replaces it
+- Rule for agents: never run `pip install` globally; always use `uv` inside a project `.venv`
+
 ## Web Development
 
-- Node.js
-- npm
-- pnpm
-- yarn if needed
-- TypeScript
-- ESLint
-- Prettier
-- Vite or similar project-local tooling
+- Node.js (via NodeSource — system-wide runtime)
+- npm (comes with Node.js)
+- pnpm (preferred package manager for new projects)
+- TypeScript (project-local via pnpm/npm, not global)
+- ESLint (project-local)
+- Prettier (project-local)
+- tsx (global via npm — allows running TypeScript files directly without a build step)
+- Vite or similar (project-local only)
+
+Notes:
+- `yarn` removed — pnpm covers it with better performance and disk efficiency
+- TypeScript, ESLint, Prettier are project-local; only `tsx` warrants a global install for quick scripting
 
 ## C / C++
 
-- GCC
-- Clang
-- Make
-- CMake
-- Ninja
-- GDB
-- LLDB
-- Valgrind
+Compilers, debuggers, and build tools are covered under Core Development above.
+C/C++-specific additions:
+
 - clang-format
 - clang-tidy
+- address sanitizer / undefined behaviour sanitizer (asan/ubsan — built into gcc/clang, no separate install)
+- lcov (coverage reporting)
 
 ## C# / .NET
 
@@ -370,20 +393,32 @@ Consider the following tools and ecosystems as candidates. You may add, remove, 
 
 ## Reverse Engineering
 
-- Ghidra
+WSL-native (CLI tools, install inside WSL):
 - Radare2
-- ImHex
-- Frida
-- Binutils
+- Binutils (objdump, nm, readelf, strings, strip — part of build-essential)
 - file
-- strings
 - xxd
 - hexdump
 - ExifTool
-- Wireshark
-- tshark
-- DOSBox or DOSBox-X
-- QEMU if appropriate
+- tshark (CLI-only Wireshark — no GUI needed in WSL)
+- binwalk (firmware and binary extraction)
+- p7zip-full (archive inspection and extraction)
+- foremost (file carving from raw binary data)
+- Frida (dynamic instrumentation — install via pipx)
+
+GUI tools — support both WSL and Windows paths:
+- Ghidra (actively used — support both: WSL install via OpenJDK + direct download, AND Windows-native install; bootstrap should document both and install the WSL path by default)
+- ImHex (native Windows build preferred; WSLg acceptable)
+- Wireshark (GUI — Windows install preferred; tshark handles WSL capture needs)
+
+Optional / isolated (container or VM recommended for risky samples):
+- DOSBox-X (niche — optional install only)
+- QEMU (large — optional, use containers where possible)
+
+Notes:
+- `strings` removed as separate entry — it is part of binutils
+- Wireshark GUI removed from WSL layer; tshark is the right tool here
+- Risky or unknown binaries should be analysed in an isolated container, not the base WSL environment
 
 ## Image and Media
 
@@ -397,6 +432,13 @@ Consider the following tools and ecosystems as candidates. You may add, remove, 
 
 ## Data Science and ML
 
+Global CLI tools (install via pipx):
+- jupyterlab (global launch point — but kernels are project-local)
+- duckdb CLI (fast local analytical queries on CSV/Parquet/JSON without a server)
+- sqlite-utils (CLI for SQLite — pairs with DuckDB for lightweight data work)
+- csvkit (CSV inspection, filtering, and conversion from the command line — agents use this constantly)
+
+Project-local only (never global pip install):
 - Pandas
 - NumPy
 - SQLAlchemy
@@ -405,9 +447,12 @@ Consider the following tools and ecosystems as candidates. You may add, remove, 
 - Seaborn
 - Plotly
 - Scikit-learn
-- JupyterLab
-- DuckDB
-- sqlite-utils
+- PyTorch (optional, project-local or containerized)
+- Keras / TensorFlow (optional, containerized preferred)
+
+Notes:
+- Heavy ML frameworks (PyTorch, TensorFlow) must be project-local or containerized — never global
+- GPU/CUDA builds are a separate optional layer; do not assume GPU availability
 
 ## Office and PDF Automation
 
@@ -424,15 +469,21 @@ Consider the following tools and ecosystems as candidates. You may add, remove, 
 
 ## Research and Web Automation
 
+Project-local Python libraries:
 - requests
 - httpx
 - BeautifulSoup
 - lxml
 - Scrapy
-- Playwright
-- Selenium if needed
-- markdown tooling
-- local research folder conventions
+- Playwright (install browsers via `playwright install` per project)
+
+Global CLI tools:
+- markdownlint-cli (via npm — validates markdown docs; agents use this before committing docs)
+- pandoc (document conversion — global install justified by broad cross-project use)
+
+Notes:
+- `Selenium` removed — Playwright covers all its use cases with a cleaner API and better async support
+- Browser binaries for Playwright should be installed per-project, not globally
 
 ## Containers and Isolation
 
