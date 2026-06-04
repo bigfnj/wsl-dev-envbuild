@@ -757,5 +757,38 @@
     "status": "core",
     "notes": "audio/video transcoding",
     "last_verified": "2026-06-04"
+  },
+  {
+    "name": "docker",
+    "binary": "docker",
+    "group": "docker",
+    "scope": "global",
+    "install_method": "docker-apt",
+    "detect": "docker --version",
+    "status": "core",
+    "notes": "Docker Engine (or existing Docker Desktop)",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "docker-compose",
+    "binary": "docker",
+    "group": "docker",
+    "scope": "global",
+    "install_method": "docker-apt",
+    "detect": "docker compose version",
+    "status": "core",
+    "notes": "Compose v2 plugin — invoke as 'docker compose'",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "devcontainer",
+    "binary": "devcontainer",
+    "group": "containers",
+    "scope": "global",
+    "install_method": "npm-user",
+    "detect": "devcontainer --version",
+    "status": "core",
+    "notes": "Dev Containers CLI",
+    "last_verified": "2026-06-04"
   }
 ]
