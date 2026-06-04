@@ -427,5 +427,49 @@
     "status": "core",
     "notes": "launch with 'jupyter-lab'; project kernels stay local",
     "last_verified": "2026-06-04"
+  },
+  {
+    "name": "nodejs",
+    "binary": "node",
+    "group": "node",
+    "scope": "global",
+    "install_method": "nodesource",
+    "detect": "node --version",
+    "status": "core",
+    "notes": "current LTS via NodeSource apt repo",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "npm",
+    "binary": "npm",
+    "group": "node",
+    "scope": "global",
+    "install_method": "nodesource",
+    "detect": "npm --version",
+    "status": "core",
+    "notes": "bundled with Node.js",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "pnpm",
+    "binary": "pnpm",
+    "group": "node",
+    "scope": "global",
+    "install_method": "npm-user",
+    "detect": "pnpm --version",
+    "status": "core",
+    "notes": "preferred package manager (npm -g into ~/.local)",
+    "last_verified": "2026-06-04"
+  },
+  {
+    "name": "tsx",
+    "binary": "tsx",
+    "group": "node",
+    "scope": "global",
+    "install_method": "npm-user",
+    "detect": "tsx --version",
+    "status": "core",
+    "notes": "run TypeScript files directly, no build step",
+    "last_verified": "2026-06-04"
   }
 ]
