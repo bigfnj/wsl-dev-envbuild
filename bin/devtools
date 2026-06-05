@@ -27,10 +27,17 @@ require_manifest() {
     [ -f "$MANIFEST" ] || { bad "manifest not found: $MANIFEST"; exit 1; }
 }
 
+_env_version() {
+    local stamp="$HOME/tools/env-version"
+    if [ -f "$stamp" ]; then cat "$stamp"; else echo "unknown (run bootstrap.sh to stamp)"; fi
+}
+
 cmd_report() {
     require_manifest
     local total; total="$(jq 'length' "$MANIFEST")"
+    local repo_ver; repo_ver="$(cat "$REPO_ROOT/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "unknown")"
     printf '%sDev environment inventory%s  (%s tools)\n' "$(_c 1)" "$(_c 0)" "$total"
+    printf '%senv version:%s  %s  %s(repo: %s)%s\n' "$(_c 1)" "$(_c 0)" "$(_env_version)" "$(_c 90)" "$repo_ver" "$(_c 0)"
     jq -r '
         group_by(.group)[]
         | "\n" + (.[0].group | ascii_upcase) + ":",
@@ -78,6 +85,21 @@ cmd_doctor() {
     # docker daemon
     if command -v docker >/dev/null 2>&1; then
         if docker info >/dev/null 2>&1; then ok "docker daemon reachable"; else warn "docker installed but daemon unreachable (start it, or re-login for the docker group)"; issues=$((issues+1)); fi
+    fi
+    # environment version
+    local stamp="$HOME/tools/env-version" repo_ver installed_ver
+    repo_ver="$(cat "$REPO_ROOT/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "unknown")"
+    if [ -f "$stamp" ]; then
+        installed_ver="$(awk '{print $1}' "$stamp")"
+        if [ "$installed_ver" = "$repo_ver" ]; then
+            ok "env version $installed_ver matches repo"
+        else
+            warn "installed version ($installed_ver) differs from repo ($repo_ver) — run ./bootstrap.sh"
+            issues=$((issues+1))
+        fi
+    else
+        warn "no version stamp found — run ./bootstrap.sh to stamp the installed version"
+        issues=$((issues+1))
     fi
     # manifest drift
     if [ -f "$MANIFEST" ]; then

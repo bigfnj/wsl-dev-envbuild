@@ -116,6 +116,12 @@ main() {
     log_group "agent discovery"
     write_agent_discovery
 
+    # Stamp the installed environment version so devtools can report it.
+    local ver; ver="$(cat "$REPO_ROOT/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "unknown")"
+    local stamp="$HOME/tools/env-version"
+    printf '%s  %s\n' "$ver" "$(date +%Y-%m-%d)" > "$stamp"
+    log_ok "environment version $ver stamped -> $stamp"
+
     log_group "done"
     log_ok "bootstrap complete — run 'devtools report' for the inventory"
 }

@@ -1,5 +1,7 @@
 # wsl-dev-envbuild
 
+> **Environment version: 1.0.0** — run `devtools report` to see what's installed, `devtools doctor` to check for drift.
+
 Reproducible, idempotent, agent-discoverable **WSL2 Debian development
 environment** — a broad "Swiss army knife" workstation (modern dev, legacy
 modernization, reverse engineering, image/media, office/PDF, data science, web
@@ -30,14 +32,14 @@ what's installed before touching anything. Full rationale:
 
 | Group | Default | Installs |
 |---|:---:|---|
-| `core` | ✅ | git, build toolchain, ripgrep/fd/fzf/bat/jq/delta, tmux, shellcheck, … (+ folders, PATH, `devtools`) |
+| `core` | ✅ | git, build toolchain, ripgrep/fd/fzf/bat/jq/delta, tmux, shellcheck, **gh**, **hyperfine**, **GNU time** (+ folders, PATH, `devtools`) |
 | `python` | ✅ | pipx, uv (also Python versions), ruff, ipython, jupyterlab |
 | `node` | ✅ | Node.js (NodeSource), pnpm, tsx |
-| `languages` | ✅ | Rust (rustup), Go, OpenJDK + Maven, .NET |
+| `languages` | ✅ | Rust (rustup + **rust-analyzer**), Go, OpenJDK + Maven, .NET |
 | `reverse` | ✅ | radare2, binwalk, exiftool, tshark, foremost, **headless DOSBox-X**, frida, **Ghidra** |
 | `data` | ✅ | DuckDB CLI, sqlite-utils, csvkit |
 | `docs` | ✅ | pandoc, markdownlint-cli |
-| `image` | ✅ | ImageMagick, ffmpeg |
+| `image` | ✅ | ImageMagick, ffmpeg, **Pillow** (pipx-injected into ipython) |
 | `containers` | ✅ | Docker Engine + Compose, devcontainer CLI |
 | `optional-heavy` | ⛔ flag | QEMU |
 | `optional-gpu` | ⛔ flag | NVIDIA/CUDA detection + guidance |
@@ -126,6 +128,20 @@ managers manage their own (e.g. `~/.cargo/bin`).
 - Internet access for package downloads
 - Recommended: enable systemd in `/etc/wsl.conf` (`[boot]\nsystemd=true`) so the
   Docker daemon starts automatically
+
+## Versioning
+
+The repo carries a [`VERSION`](VERSION) file (semver). Every `bootstrap.sh` run
+stamps the installed version and date into `~/tools/env-version`:
+
+```text
+1.0.0  2026-06-05
+```
+
+`devtools report` shows the installed version at the top. `devtools doctor`
+flags a mismatch between the installed stamp and the repo `VERSION` — a
+reminder to re-run `./bootstrap.sh` after a `git pull`. Bump `VERSION` whenever
+a new tool is added or a group is meaningfully changed.
 
 ## Extending
 

@@ -789,7 +789,7 @@
     "detect": "magick --version",
     "status": "core",
     "notes": "image manipulation/conversion",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "ffmpeg",
@@ -800,7 +800,18 @@
     "detect": "ffmpeg -version",
     "status": "core",
     "notes": "audio/video transcoding",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
+  },
+  {
+    "name": "pillow",
+    "binary": "ipython",
+    "group": "image",
+    "scope": "global",
+    "install_method": "pipx-inject",
+    "detect": "ipython -c 'import PIL; print(PIL.__version__)'",
+    "status": "core",
+    "notes": "Python imaging library; injected into ipython for REPL use — use 'uv add pillow' for project code",
+    "last_verified": "2026-06-05"
   },
   {
     "name": "docker",
