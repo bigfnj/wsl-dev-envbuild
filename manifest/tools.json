@@ -905,11 +905,11 @@
     "name": "sdxl-inpaint-checkpoint",
     "binary": "sdxl-inpaint",
     "group": "optional-gpu",
-    "scope": "project-local",
+    "scope": "container",
     "install_method": "huggingface",
     "detect": "sdxl-inpaint",
     "status": "optional",
-    "notes": "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Runs in ~/projects/myai/hyperreal/.venv. Download: cd ~/projects/myai/hyperreal && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+    "notes": "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Canonical: containerized GPU. Exception: if a GPU project venv already exists (e.g. ~/projects/myai/hyperreal/.venv), run from there instead. Download: cd ~/projects/myai/hyperreal && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
     "last_verified": "2026-06-05"
   }
 ]

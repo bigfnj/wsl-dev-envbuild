@@ -72,8 +72,8 @@ _optional_gpu_record_sdxl_inpaint() {
 test -d "$hf_dir"
 SHIM
         chmod +x "$shim"
-        manifest_add sdxl-inpaint-checkpoint sdxl-inpaint optional-gpu project-local huggingface \
+        manifest_add sdxl-inpaint-checkpoint sdxl-inpaint optional-gpu container huggingface \
             "sdxl-inpaint" optional \
-            "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Runs in ~/projects/myai/hyperreal/.venv. Download: cd ~/projects/myai/hyperreal && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
+            "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Canonical: containerized GPU. Exception: if a GPU project venv already exists (e.g. ~/projects/myai/hyperreal/.venv), run from there instead. Download: cd ~/projects/myai/hyperreal && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
     fi
 }
