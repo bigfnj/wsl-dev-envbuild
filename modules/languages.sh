@@ -15,6 +15,7 @@ languages_desc() { echo "Rust (rustup), Go, OpenJDK + Maven, .NET (best-effort)"
 
 languages_install() {
     languages_rust
+    languages_rust_analyzer
     languages_go
     languages_java
     languages_dotnet
@@ -33,6 +34,21 @@ languages_rust() {
     # Make cargo usable for the rest of this bootstrap run.
     # shellcheck disable=SC1091
     [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+}
+
+# rust-analyzer rustup component — Rust LSP for IDE support. Runs independently
+# of languages_rust so it installs/verifies even when Rust is already present.
+languages_rust_analyzer() {
+    if ! has cargo; then
+        log_warn "rust-analyzer: cargo not found — skipping (install Rust first)"
+        return 0
+    fi
+    if rustup component list --installed 2>/dev/null | grep -q "^rust-analyzer"; then
+        log_skip "rust-analyzer component already installed"
+        return 0
+    fi
+    log_info "adding rust-analyzer rustup component"
+    rustup component add rust-analyzer
 }
 
 # Go from apt — trixie ships 1.24, current enough; lands on /usr/bin.
@@ -72,6 +88,9 @@ languages_record_manifest() {
     if has cargo;       then manifest_add rust    cargo   languages global rustup "cargo --version"    core "rustup toolchain: cargo, rustc, rustfmt, clippy"; fi
     if has rustfmt;     then manifest_add rustfmt rustfmt languages global rustup "rustfmt --version"  core "Rust formatter (rustup component)"; fi
     if has cargo-clippy;then manifest_add clippy  cargo-clippy languages global rustup "cargo-clippy --version" core "Rust linter — run via 'cargo clippy'"; fi
+    if rustup component list --installed 2>/dev/null | grep -q "^rust-analyzer"; then
+        manifest_add rust-analyzer rust-analyzer languages global rustup "rust-analyzer --version" core "Rust LSP (rustup component) — IDE support"
+    fi
     if has go;          then manifest_add go      go      languages global apt    "go version"         core "Go toolchain (incl. gofmt) — trixie apt"; fi
     if has java;        then manifest_add openjdk java    languages global apt    "java --version"     core "OpenJDK (default-jdk) — trixie apt"; fi
     if has mvn;         then manifest_add maven   mvn     languages global apt    "mvn --version"      core "build tool; Gradle uses ./gradlew per project"; fi

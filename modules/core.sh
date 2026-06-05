@@ -43,7 +43,8 @@ core_packages() {
         build-essential pkg-config make cmake ninja-build \
         gcc g++ clang gdb lldb valgrind strace \
         ripgrep fd-find fzf bat git-delta jq yq tree sqlite3 \
-        tmux entr socat htop btop shellcheck shfmt tokei
+        tmux entr socat htop btop shellcheck shfmt tokei \
+        gh hyperfine time
 }
 
 # Debian ships fd as `fdfind` and bat as `batcat` (name conflicts). Expose the
@@ -82,7 +83,7 @@ core_record_manifest() {
         "ripgrep:rg" "fd-find:fdfind" "fzf:fzf" "bat:batcat" "git-delta:delta"
         "jq:jq" "yq:yq" "tree:tree" "sqlite3:sqlite3" "tmux:tmux" "entr:entr"
         "socat:socat" "htop:htop" "btop:btop" "shellcheck:shellcheck"
-        "shfmt:shfmt" "tokei:tokei"
+        "shfmt:shfmt" "tokei:tokei" "gh:gh" "hyperfine:hyperfine"
     )
     local pair name bin detect
     for pair in "${pairs[@]}"; do
@@ -93,9 +94,14 @@ core_record_manifest() {
             unzip)        detect="unzip -v" ;;
             tmux|socat)   detect="$bin -V" ;;
             entr)         detect="command -v entr" ;;
+            gh)           detect="gh --version" ;;
             *)            detect="$bin --version" ;;
         esac
         manifest_add "$name" "$bin" "core" "global" "apt" "$detect" "core" ""
     done
+    # GNU time — /usr/bin/time (separate from the shell builtin `time`).
+    if [ -x /usr/bin/time ]; then
+        manifest_add gnu-time time core global apt "/usr/bin/time --version" core "GNU time — resource usage + CPU stats; invoke as /usr/bin/time (not shell builtin)"
+    fi
     log_ok "manifest updated — $MANIFEST"
 }

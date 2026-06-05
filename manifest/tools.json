@@ -8,7 +8,7 @@
     "detect": "git --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "curl",
@@ -19,7 +19,7 @@
     "detect": "curl --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "wget",
@@ -30,7 +30,7 @@
     "detect": "wget --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "unzip",
@@ -41,7 +41,7 @@
     "detect": "unzip -v",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "zip",
@@ -52,7 +52,7 @@
     "detect": "zip --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "tar",
@@ -63,7 +63,7 @@
     "detect": "tar --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "make",
@@ -74,7 +74,7 @@
     "detect": "make --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "cmake",
@@ -85,7 +85,7 @@
     "detect": "cmake --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "ninja-build",
@@ -96,7 +96,7 @@
     "detect": "ninja --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "gcc",
@@ -107,7 +107,7 @@
     "detect": "gcc --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "g++",
@@ -118,7 +118,7 @@
     "detect": "g++ --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "clang",
@@ -129,7 +129,7 @@
     "detect": "clang --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "gdb",
@@ -140,7 +140,7 @@
     "detect": "gdb --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "lldb",
@@ -151,7 +151,7 @@
     "detect": "lldb --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "valgrind",
@@ -162,7 +162,7 @@
     "detect": "valgrind --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "strace",
@@ -173,7 +173,7 @@
     "detect": "strace --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "ripgrep",
@@ -184,7 +184,7 @@
     "detect": "rg --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "fd-find",
@@ -195,7 +195,7 @@
     "detect": "fdfind --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "fzf",
@@ -206,7 +206,7 @@
     "detect": "fzf --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "bat",
@@ -217,7 +217,7 @@
     "detect": "batcat --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "git-delta",
@@ -228,7 +228,7 @@
     "detect": "delta --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "jq",
@@ -239,7 +239,7 @@
     "detect": "jq --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "yq",
@@ -250,7 +250,7 @@
     "detect": "yq --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "tree",
@@ -261,7 +261,7 @@
     "detect": "tree --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "sqlite3",
@@ -272,7 +272,7 @@
     "detect": "sqlite3 --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "tmux",
@@ -283,7 +283,7 @@
     "detect": "tmux -V",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "entr",
@@ -294,7 +294,7 @@
     "detect": "command -v entr",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "socat",
@@ -305,7 +305,7 @@
     "detect": "socat -V",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "htop",
@@ -316,7 +316,7 @@
     "detect": "htop --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "btop",
@@ -327,7 +327,7 @@
     "detect": "btop --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "shellcheck",
@@ -338,7 +338,7 @@
     "detect": "shellcheck --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "shfmt",
@@ -349,7 +349,7 @@
     "detect": "shfmt --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "tokei",
@@ -360,7 +360,40 @@
     "detect": "tokei --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
+  },
+  {
+    "name": "gh",
+    "binary": "gh",
+    "group": "core",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "gh --version",
+    "status": "core",
+    "notes": "",
+    "last_verified": "2026-06-05"
+  },
+  {
+    "name": "hyperfine",
+    "binary": "hyperfine",
+    "group": "core",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "hyperfine --version",
+    "status": "core",
+    "notes": "",
+    "last_verified": "2026-06-05"
+  },
+  {
+    "name": "gnu-time",
+    "binary": "time",
+    "group": "core",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "/usr/bin/time --version",
+    "status": "core",
+    "notes": "GNU time — resource usage + CPU stats; invoke as /usr/bin/time (not shell builtin)",
+    "last_verified": "2026-06-05"
   },
   {
     "name": "python3",
@@ -481,7 +514,7 @@
     "detect": "cargo --version",
     "status": "core",
     "notes": "rustup toolchain: cargo, rustc, rustfmt, clippy",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "rustfmt",
@@ -492,7 +525,7 @@
     "detect": "rustfmt --version",
     "status": "core",
     "notes": "Rust formatter (rustup component)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "clippy",
@@ -503,7 +536,18 @@
     "detect": "cargo-clippy --version",
     "status": "core",
     "notes": "Rust linter — run via 'cargo clippy'",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
+  },
+  {
+    "name": "rust-analyzer",
+    "binary": "rust-analyzer",
+    "group": "languages",
+    "scope": "global",
+    "install_method": "rustup",
+    "detect": "rust-analyzer --version",
+    "status": "core",
+    "notes": "Rust LSP (rustup component) — IDE support",
+    "last_verified": "2026-06-05"
   },
   {
     "name": "go",
@@ -514,7 +558,7 @@
     "detect": "go version",
     "status": "core",
     "notes": "Go toolchain (incl. gofmt) — trixie apt",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "openjdk",
@@ -525,7 +569,7 @@
     "detect": "java --version",
     "status": "core",
     "notes": "OpenJDK (default-jdk) — trixie apt",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "maven",
@@ -536,7 +580,7 @@
     "detect": "mvn --version",
     "status": "core",
     "notes": "build tool; Gradle uses ./gradlew per project",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "dotnet",
@@ -547,7 +591,7 @@
     "detect": "dotnet --version",
     "status": "core",
     "notes": ".NET SDK via Microsoft feed",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-05"
   },
   {
     "name": "radare2",
