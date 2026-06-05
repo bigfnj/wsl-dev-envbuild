@@ -146,18 +146,46 @@ write_agent_discovery() {
 
 This machine is provisioned by wsl-dev-envbuild (repo: $REPO_ROOT).
 
-BEFORE installing anything, inspect what is already here:
+## Before installing anything
+
+Run these first — the tool you want is probably already here:
   - \`devtools report\`  — full tool inventory
   - \`devtools check\`   — verify everything is present
   - \`smoke-test\`       — exercise the toolchain end-to-end
-The environment is broad; the tool you need is probably already installed.
 
-Conventions (full rules: $REPO_ROOT/docs/agent-rules.md):
-- Python: project deps via \`uv\` in a .venv; global CLIs via pipx; never system pip.
-- Node: project deps via pnpm + local node_modules; only pnpm/tsx are global.
-- Heavy/risky work (ML/CUDA, untrusted binaries) -> containers, not the base system.
-- Work under ~/projects (Linux filesystem), never /mnt/c.
-- Inventory of record: $REPO_ROOT/manifest/tools.json
+Full rules: $REPO_ROOT/docs/agent-rules.md
+
+## Install rules (follow exactly — violations cause environment rot)
+
+**Python libraries** (anything you \`import\`):
+  - Project-local ONLY: \`uv add <pkg>\` inside a project with a \`pyproject.toml\`.
+  - NEVER \`uv pip install\` (untracked, breaks on next \`uv sync\`).
+  - NEVER \`pip install\` or \`pip3 install\` into system Python.
+  - NEVER \`pipx\` a library.
+
+**Python CLI tools** (things you invoke by name, e.g. ruff, ipython):
+  - \`pipx install <pkg>\` — each gets its own isolated venv.
+
+**ML / CUDA / heavy stacks** (PyTorch, ONNX, Triton, large model weights):
+  - Container or devcontainer. NOT the base system, even via pipx.
+  - Exception: if the project already has a GPU venv, add to its pyproject.toml.
+
+**System tools** (ripgrep, ffmpeg, jq, …):
+  - \`apt\` only, via the right \`modules/<group>.sh\`.
+
+**Node packages**: \`pnpm\` for project deps; nothing global except pnpm + tsx.
+
+## Adding a tool to this repo (mandatory steps — do not skip any)
+
+1. Edit \`modules/<group>.sh\`: add install call in \`*_install\` and \`manifest_add\` in \`*_record_manifest\`.
+2. \`./bootstrap.sh --only <group>\` — installs the tool AND regenerates the manifest.
+3. \`devtools check\` — must show no drift.
+4. \`smoke-test\` — must exit 0. Red = broken build; fix before pushing.
+5. Only then: \`git add -A && git commit && git push\`.
+
+## Inventory of record
+
+$REPO_ROOT/manifest/tools.json
 EOF
 )"
     ensure_block "$HOME/AGENTS.md" "DEVENV_RULES" "$body"

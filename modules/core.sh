@@ -44,7 +44,8 @@ core_packages() {
         gcc g++ clang gdb lldb valgrind strace \
         ripgrep fd-find fzf bat git-delta jq yq tree sqlite3 \
         tmux entr socat htop btop shellcheck shfmt tokei \
-        gh hyperfine time
+        gh hyperfine time \
+        sshpass expect
 }
 
 # Debian ships fd as `fdfind` and bat as `batcat` (name conflicts). Expose the
@@ -99,6 +100,8 @@ core_record_manifest() {
         esac
         manifest_add "$name" "$bin" "core" "global" "apt" "$detect" "core" ""
     done
+    if has sshpass; then manifest_add sshpass sshpass core global apt "sshpass -V" core "non-interactive SSH password auth"; fi
+    if has expect;  then manifest_add expect  expect  core global apt "expect -version"    core "scripted interactive CLI automation"; fi
     # GNU time — /usr/bin/time (separate from the shell builtin `time`).
     if [ -x /usr/bin/time ]; then
         manifest_add gnu-time time core global apt "/usr/bin/time --version" core "GNU time — resource usage + CPU stats; invoke as /usr/bin/time (not shell builtin)"

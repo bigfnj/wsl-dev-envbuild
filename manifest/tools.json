@@ -878,5 +878,27 @@
     "status": "optional",
     "notes": "GPU passthrough from Windows host driver; CUDA toolkit/ML libs are project/container scoped",
     "last_verified": "2026-06-04"
+  },
+  {
+    "name": "sshpass",
+    "binary": "sshpass",
+    "group": "core",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "sshpass -V",
+    "status": "core",
+    "notes": "non-interactive SSH password auth",
+    "last_verified": "2026-06-05"
+  },
+  {
+    "name": "expect",
+    "binary": "expect",
+    "group": "core",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "expect -version",
+    "status": "core",
+    "notes": "scripted interactive CLI automation",
+    "last_verified": "2026-06-05"
   }
 ]

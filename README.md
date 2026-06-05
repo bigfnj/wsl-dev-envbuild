@@ -1,6 +1,6 @@
 # wsl-dev-envbuild
 
-> **Environment version: 1.0.0** — run `devtools report` to see what's installed, `devtools doctor` to check for drift.
+> **Environment version: 1.1.0** — run `devtools report` to see what's installed, `devtools doctor` to check for drift.
 
 Reproducible, idempotent, agent-discoverable **WSL2 Debian development
 environment** — a broad "Swiss army knife" workstation (modern dev, legacy
@@ -135,13 +135,20 @@ The repo carries a [`VERSION`](VERSION) file (semver). Every `bootstrap.sh` run
 stamps the installed version and date into `~/tools/env-version`:
 
 ```text
-1.0.0  2026-06-05
+1.1.0  2026-06-05
 ```
 
 `devtools report` shows the installed version at the top. `devtools doctor`
 flags a mismatch between the installed stamp and the repo `VERSION` — a
 reminder to re-run `./bootstrap.sh` after a `git pull`. Bump `VERSION` whenever
 a new tool is added or a group is meaningfully changed.
+
+### Changelog
+
+| Version | Change |
+|---------|--------|
+| **1.1.0** | Expanded `write_agent_discovery` to inline full install rules into `~/CLAUDE.md` and `~/AGENTS.md` — all agents on all projects now see Python/ML/system install constraints without needing to discover `docs/agent-rules.md` |
+| **1.0.0** | Initial stable release — versioning, README refresh, Pillow remediation |
 
 ## Extending
 
