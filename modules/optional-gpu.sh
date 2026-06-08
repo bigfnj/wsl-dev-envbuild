@@ -9,30 +9,20 @@
 # --gpus`). This module reports what's available and prints the canonical setup
 # paths so the choice and the cost stay explicit.
 
-optional_gpu_desc() { echo "NVIDIA GPU: nvtop, nvidia-container-toolkit, detection + guidance"; }
+optional_gpu_desc() { echo "NVIDIA GPU: nvtop, nvidia-container-toolkit, iopaint (AI inpainting), detection + guidance"; }
 
 optional_gpu_install() {
-    if ! has nvidia-smi; then
-        if is_wsl; then
-            log_warn "no nvidia-smi — no GPU passthrough detected."
-            log_info "To enable: install the NVIDIA driver on the Windows host (the WSL CUDA stack rides on it — do NOT install a Linux NVIDIA driver inside WSL), then restart WSL."
-        else
-            log_warn "no nvidia-smi — NVIDIA GPU driver not installed."
-            log_info "To enable: install the NVIDIA driver from https://www.nvidia.com/Download/index.aspx or via your distro's package manager."
-        fi
-        return 0
-    fi
+    if has nvidia-smi; then
+        log_ok "GPU detected:"
+        nvidia-smi -L 2>/dev/null | sed 's/^/    /'
+        local driver
+        driver="$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null | head -1)"
+        [ -n "$driver" ] && log_info "host driver: $driver"
 
-    log_ok "GPU detected:"
-    nvidia-smi -L 2>/dev/null | sed 's/^/    /'
-    local driver
-    driver="$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null | head -1)"
-    [ -n "$driver" ] && log_info "host driver: $driver"
+        optional_gpu_nvtop
+        optional_gpu_container_toolkit
 
-    optional_gpu_nvtop
-    optional_gpu_container_toolkit
-
-    cat <<'GUIDE'
+        cat <<'GUIDE'
 
 GPU path summary:
 
@@ -53,25 +43,42 @@ GPU path summary:
 
 GUIDE
 
-    if is_wsl; then
-        manifest_add nvidia-smi nvidia-smi optional-gpu global windows-host-driver \
-            "nvidia-smi -L" optional \
-            "GPU available via Windows host driver passthrough; CUDA toolkit/ML libs are project/container scoped"
+        if is_wsl; then
+            manifest_add nvidia-smi nvidia-smi optional-gpu global windows-host-driver \
+                "nvidia-smi -L" optional \
+                "GPU available via Windows host driver passthrough; CUDA toolkit/ML libs are project/container scoped"
+        else
+            manifest_add nvidia-smi nvidia-smi optional-gpu global apt \
+                "nvidia-smi -L" optional \
+                "GPU available via local NVIDIA driver; CUDA toolkit/ML libs are project/container scoped"
+        fi
+        if has nvtop; then
+            manifest_add nvtop nvtop optional-gpu global apt \
+                "nvtop --version" optional "GPU process monitor (htop for NVIDIA)"
+        fi
+        if pkg_installed nvidia-container-toolkit; then
+            manifest_add nvidia-container-toolkit nvidia-ctk optional-gpu global apt \
+                "nvidia-ctk --version" optional \
+                "enables docker run --gpus all; runtime configured via nvidia-ctk"
+        fi
     else
-        manifest_add nvidia-smi nvidia-smi optional-gpu global apt \
-            "nvidia-smi -L" optional \
-            "GPU available via local NVIDIA driver; CUDA toolkit/ML libs are project/container scoped"
+        if is_wsl; then
+            log_warn "no nvidia-smi — no GPU passthrough detected."
+            log_info "To enable: install the NVIDIA driver on the Windows host (the WSL CUDA stack rides on it — do NOT install a Linux NVIDIA driver inside WSL), then restart WSL."
+        else
+            log_warn "no nvidia-smi — NVIDIA GPU driver not installed."
+            log_info "To enable: install the NVIDIA driver from https://www.nvidia.com/Download/index.aspx or via your distro's package manager."
+        fi
     fi
-    if has nvtop; then
-        manifest_add nvtop nvtop optional-gpu global apt \
-            "nvtop --version" optional "GPU process monitor (htop for NVIDIA)"
-    fi
-    if pkg_installed nvidia-container-toolkit; then
-        manifest_add nvidia-container-toolkit nvidia-ctk optional-gpu global apt \
-            "nvidia-ctk --version" optional \
-            "enables docker run --gpus all; runtime configured via nvidia-ctk"
-    fi
+
+    # iopaint installs regardless of GPU presence — works on CPU, much faster on GPU.
+    optional_gpu_iopaint
     _optional_gpu_record_sdxl_inpaint
+    if has iopaint; then
+        manifest_add iopaint iopaint optional-gpu global pipx \
+            "command -v iopaint" optional \
+            "AI inpainting: object/person/background removal (LaMa, MAT, SD models; GPU recommended for speed)"
+    fi
     log_ok "manifest updated — optional-gpu group"
 }
 
@@ -104,6 +111,26 @@ optional_gpu_container_toolkit() {
     else
         log_info "docker not running — after starting Docker, run: sudo nvidia-ctk runtime configure --runtime=docker"
     fi
+}
+
+# iopaint — AI object/person/background removal via inpainting models.
+# LaMa (default) is a lightweight transformer; MAT and SD variants need more VRAM.
+# PyTorch dependency makes the tool venv ~2-4 GB; models download on first use.
+# Uses uv tool install (not pipx): iopaint pins Pillow==9.5.0 which fails to build
+# on Python 3.13 -- uv --overrides substitutes Pillow>=11.0.0 without breaking runtime.
+optional_gpu_iopaint() {
+    if has iopaint; then
+        log_skip "iopaint already installed"
+        return 0
+    fi
+    if is_dry_run; then log_info "[DRY-RUN] would uv tool install iopaint (~2-4 GB including PyTorch)"; return 0; fi
+    has uv || { log_err "uv not installed; cannot install iopaint (run python group first)"; return 1; }
+    log_info "uv tool install iopaint (PyTorch dependency -- large download)"
+    local override; override="$(mktemp)"
+    printf 'Pillow>=11.0.0
+' > "$override"
+    uv tool install iopaint --override "$override"
+    rm -f "$override"
 }
 
 _optional_gpu_record_sdxl_inpaint() {
