@@ -14,21 +14,22 @@ data_install() {
 
 # DuckDB CLI — standalone glibc binary from GitHub releases into ~/tools/bin.
 # (The pip `duckdb` package is the Python library, not the CLI — different thing.)
+# Pinned to a known-good release; bump DUCKDB_VERSION + SHA256 together after
+# testing, then update manifest_add source_repo for devtools outdated checks.
+DUCKDB_VERSION="v1.5.3"
+DUCKDB_SHA256=""  # set to sha256sum of duckdb_cli-linux-amd64.zip after verifying
+
 data_duckdb() {
     if has duckdb; then
         log_skip "duckdb already installed ($(duckdb --version 2>/dev/null))"
         return 0
     fi
-    local url zip
-    url="$(curl -fsSL https://api.github.com/repos/duckdb/duckdb/releases/latest 2>/dev/null \
-        | jq -r '.assets[] | select(.name=="duckdb_cli-linux-amd64.zip") | .browser_download_url' | head -1)"
-    if [ -z "$url" ]; then
-        log_warn "duckdb: could not resolve CLI URL — skipping"
-        return 0
-    fi
-    zip="$(mktemp --suffix=.zip)"
-    log_info "downloading DuckDB CLI ($(basename "$url"))"
+    if is_dry_run; then log_info "[DRY-RUN] would download DuckDB CLI $DUCKDB_VERSION"; return 0; fi
+    local url="https://github.com/duckdb/duckdb/releases/download/${DUCKDB_VERSION}/duckdb_cli-linux-amd64.zip"
+    local zip; zip="$(mktemp --suffix=.zip)"
+    log_info "downloading DuckDB CLI $DUCKDB_VERSION"
     if curl -fsSL "$url" -o "$zip"; then
+        verify_sha256 "$zip" "$DUCKDB_SHA256" || { rm -f "$zip"; return 1; }
         unzip -q -o "$zip" -d "$HOME/tools/bin"
         chmod +x "$HOME/tools/bin/duckdb"
         log_ok "duckdb -> ~/tools/bin/duckdb"
@@ -39,7 +40,7 @@ data_duckdb() {
 }
 
 data_record_manifest() {
-    if has duckdb;       then manifest_add duckdb       duckdb       data global github-zip "duckdb --version"       core "in-process analytical SQL over CSV/Parquet/JSON"; fi
+    if has duckdb;       then manifest_add duckdb       duckdb       data global github-zip "duckdb --version"       core "in-process analytical SQL over CSV/Parquet/JSON" "" "duckdb/duckdb"; fi
     if has sqlite-utils; then manifest_add sqlite-utils sqlite-utils data global pipx       "sqlite-utils --version" core "SQLite CLI + automation"; fi
     if has csvlook;      then manifest_add csvkit       csvlook      data global pipx       "csvlook --version"      core "CSV inspection/conversion (csvlook, csvcut, …)"; fi
     log_ok "manifest updated — data group"

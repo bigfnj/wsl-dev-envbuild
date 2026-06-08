@@ -8,7 +8,10 @@
     "detect": "git --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "2.47.3",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "curl",
@@ -19,7 +22,10 @@
     "detect": "curl --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "8.14.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "wget",
@@ -30,7 +36,10 @@
     "detect": "wget --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.25.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "unzip",
@@ -41,7 +50,10 @@
     "detect": "unzip -v",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "6.00",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "zip",
@@ -52,7 +64,10 @@
     "detect": "zip --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "tar",
@@ -63,7 +78,10 @@
     "detect": "tar --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.35",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "make",
@@ -74,7 +92,10 @@
     "detect": "make --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "4.4.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "cmake",
@@ -85,7 +106,10 @@
     "detect": "cmake --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.31.6",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "ninja-build",
@@ -96,7 +120,10 @@
     "detect": "ninja --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.12.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "gcc",
@@ -107,7 +134,10 @@
     "detect": "gcc --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "14.2.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "g++",
@@ -118,7 +148,10 @@
     "detect": "g++ --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "14.2.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "clang",
@@ -129,7 +162,10 @@
     "detect": "clang --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "19.1.7",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "gdb",
@@ -140,7 +176,10 @@
     "detect": "gdb --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "16.3",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "lldb",
@@ -151,7 +190,10 @@
     "detect": "lldb --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "19.1.7",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "valgrind",
@@ -162,7 +204,10 @@
     "detect": "valgrind --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.24.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "strace",
@@ -173,7 +218,10 @@
     "detect": "strace --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "6.13",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "ripgrep",
@@ -184,7 +232,10 @@
     "detect": "rg --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "14.1.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "fd-find",
@@ -195,7 +246,10 @@
     "detect": "fdfind --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "10.2.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "fzf",
@@ -206,7 +260,10 @@
     "detect": "fzf --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.60",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "bat",
@@ -217,7 +274,10 @@
     "detect": "batcat --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.25.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "git-delta",
@@ -228,7 +288,10 @@
     "detect": "delta --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.18.2",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "jq",
@@ -239,7 +302,10 @@
     "detect": "jq --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.7",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "yq",
@@ -250,7 +316,10 @@
     "detect": "yq --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.4.3",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "tree",
@@ -261,7 +330,10 @@
     "detect": "tree --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "2.2.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "sqlite3",
@@ -272,7 +344,10 @@
     "detect": "sqlite3 --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.46.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "tmux",
@@ -283,7 +358,10 @@
     "detect": "tmux -V",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.5",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "entr",
@@ -294,7 +372,10 @@
     "detect": "command -v entr",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "socat",
@@ -305,7 +386,10 @@
     "detect": "socat -V",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.8.0.3",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "htop",
@@ -316,7 +400,10 @@
     "detect": "htop --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.4.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "btop",
@@ -327,7 +414,10 @@
     "detect": "btop --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.3.2",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "shellcheck",
@@ -338,7 +428,10 @@
     "detect": "shellcheck --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.10.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "shfmt",
@@ -349,7 +442,10 @@
     "detect": "shfmt --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.8.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "tokei",
@@ -360,7 +456,10 @@
     "detect": "tokei --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "12.1.2",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "gh",
@@ -371,7 +470,10 @@
     "detect": "gh --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "2.93.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "hyperfine",
@@ -382,7 +484,10 @@
     "detect": "hyperfine --version",
     "status": "core",
     "notes": "",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.19.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "gnu-time",
@@ -393,7 +498,10 @@
     "detect": "/usr/bin/time --version",
     "status": "core",
     "notes": "GNU time — resource usage + CPU stats; invoke as /usr/bin/time (not shell builtin)",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "python3",
@@ -404,7 +512,9 @@
     "detect": "python3 --version",
     "status": "core",
     "notes": "system Python (Debian-managed; never pip-install into it)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.13.5",
+    "compat_requires": []
   },
   {
     "name": "pipx",
@@ -415,7 +525,9 @@
     "detect": "pipx --version",
     "status": "core",
     "notes": "manages global Python CLIs in isolated venvs",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.7.1",
+    "compat_requires": []
   },
   {
     "name": "uv",
@@ -426,7 +538,9 @@
     "detect": "uv --version",
     "status": "core",
     "notes": "project deps + Python versions (uv python install)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.11.19",
+    "compat_requires": []
   },
   {
     "name": "ruff",
@@ -437,7 +551,9 @@
     "detect": "ruff --version",
     "status": "core",
     "notes": "linter + formatter; replaces black/flake8",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.15.16",
+    "compat_requires": []
   },
   {
     "name": "ipython",
@@ -448,7 +564,9 @@
     "detect": "ipython --version",
     "status": "core",
     "notes": "interactive REPL",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "9.14.0",
+    "compat_requires": []
   },
   {
     "name": "jupyterlab",
@@ -459,7 +577,9 @@
     "detect": "jupyter-lab --version",
     "status": "core",
     "notes": "launch with 'jupyter-lab'; project kernels stay local",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "4.5.8",
+    "compat_requires": []
   },
   {
     "name": "nodejs",
@@ -470,7 +590,9 @@
     "detect": "node --version",
     "status": "core",
     "notes": "current LTS via NodeSource apt repo",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "22.22.3",
+    "compat_requires": []
   },
   {
     "name": "npm",
@@ -481,7 +603,9 @@
     "detect": "npm --version",
     "status": "core",
     "notes": "bundled with Node.js",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "10.9.8",
+    "compat_requires": []
   },
   {
     "name": "pnpm",
@@ -492,7 +616,9 @@
     "detect": "pnpm --version",
     "status": "core",
     "notes": "preferred package manager (npm -g into ~/.local)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "11.5.1",
+    "compat_requires": []
   },
   {
     "name": "tsx",
@@ -503,7 +629,9 @@
     "detect": "tsx --version",
     "status": "core",
     "notes": "run TypeScript files directly, no build step",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "4.22.4",
+    "compat_requires": []
   },
   {
     "name": "rust",
@@ -514,7 +642,9 @@
     "detect": "cargo --version",
     "status": "core",
     "notes": "rustup toolchain: cargo, rustc, rustfmt, clippy",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.96.0",
+    "compat_requires": []
   },
   {
     "name": "rustfmt",
@@ -525,7 +655,9 @@
     "detect": "rustfmt --version",
     "status": "core",
     "notes": "Rust formatter (rustup component)",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.9.0",
+    "compat_requires": []
   },
   {
     "name": "clippy",
@@ -536,7 +668,9 @@
     "detect": "cargo-clippy --version",
     "status": "core",
     "notes": "Rust linter — run via 'cargo clippy'",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.1.96",
+    "compat_requires": []
   },
   {
     "name": "rust-analyzer",
@@ -547,7 +681,11 @@
     "detect": "rust-analyzer --version",
     "status": "core",
     "notes": "Rust LSP (rustup component) — IDE support",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.96.0",
+    "compat_requires": [
+      "rust"
+    ]
   },
   {
     "name": "go",
@@ -558,7 +696,9 @@
     "detect": "go version",
     "status": "core",
     "notes": "Go toolchain (incl. gofmt) — trixie apt",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.24.4",
+    "compat_requires": []
   },
   {
     "name": "openjdk",
@@ -569,7 +709,9 @@
     "detect": "java --version",
     "status": "core",
     "notes": "OpenJDK (default-jdk) — trixie apt",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "21.0.11",
+    "compat_requires": []
   },
   {
     "name": "maven",
@@ -580,7 +722,9 @@
     "detect": "mvn --version",
     "status": "core",
     "notes": "build tool; Gradle uses ./gradlew per project",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.9.9",
+    "compat_requires": []
   },
   {
     "name": "dotnet",
@@ -591,7 +735,9 @@
     "detect": "dotnet --version",
     "status": "core",
     "notes": ".NET SDK via Microsoft feed",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "9.0.314",
+    "compat_requires": []
   },
   {
     "name": "radare2",
@@ -602,7 +748,10 @@
     "detect": "r2 -v",
     "status": "core",
     "notes": "RE framework (official .deb)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "6.1.6",
+    "compat_requires": [],
+    "source_repo": "radareorg/radare2"
   },
   {
     "name": "binwalk",
@@ -613,7 +762,10 @@
     "detect": "command -v binwalk",
     "status": "core",
     "notes": "firmware/binary extraction",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "exiftool",
@@ -624,7 +776,10 @@
     "detect": "exiftool -ver",
     "status": "core",
     "notes": "metadata inspection",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "13.25",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "tshark",
@@ -635,7 +790,10 @@
     "detect": "tshark --version",
     "status": "core",
     "notes": "CLI packet analysis (Wireshark GUI: Windows)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "4.4.15.",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "p7zip",
@@ -646,7 +804,10 @@
     "detect": "command -v 7z",
     "status": "core",
     "notes": "archive inspection/extraction",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "foremost",
@@ -657,7 +818,10 @@
     "detect": "command -v foremost",
     "status": "core",
     "notes": "file carving from raw data",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "xxd",
@@ -668,7 +832,10 @@
     "detect": "command -v xxd",
     "status": "core",
     "notes": "hex viewer/editor",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "hexdump",
@@ -679,7 +846,10 @@
     "detect": "command -v hexdump",
     "status": "core",
     "notes": "hex dump (bsdextrautils)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "file",
@@ -690,7 +860,10 @@
     "detect": "file --version",
     "status": "core",
     "notes": "file-type identification",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "5.46",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "dosbox-x",
@@ -701,7 +874,10 @@
     "detect": "command -v dosbox-x",
     "status": "core",
     "notes": "DOS emulator; run headless via dosbox-x-headless",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "frida",
@@ -712,7 +888,10 @@
     "detect": "frida --version",
     "status": "core",
     "notes": "dynamic instrumentation",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "17.10.1",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "ghidra",
@@ -723,7 +902,10 @@
     "detect": "command -v ghidra",
     "status": "core",
     "notes": "NSA RE suite; GUI via 'ghidra', headless via 'ghidra-headless'",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": "NationalSecurityAgency/ghidra"
   },
   {
     "name": "duckdb",
@@ -734,7 +916,10 @@
     "detect": "duckdb --version",
     "status": "core",
     "notes": "in-process analytical SQL over CSV/Parquet/JSON",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.5.3",
+    "compat_requires": [],
+    "source_repo": "duckdb/duckdb"
   },
   {
     "name": "sqlite-utils",
@@ -745,7 +930,10 @@
     "detect": "sqlite-utils --version",
     "status": "core",
     "notes": "SQLite CLI + automation",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.39",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "csvkit",
@@ -756,7 +944,10 @@
     "detect": "csvlook --version",
     "status": "core",
     "notes": "CSV inspection/conversion (csvlook, csvcut, …)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "2.2.0",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "pandoc",
@@ -767,7 +958,9 @@
     "detect": "pandoc --version",
     "status": "core",
     "notes": "universal document converter",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "3.1.11.1",
+    "compat_requires": []
   },
   {
     "name": "markdownlint-cli",
@@ -778,7 +971,9 @@
     "detect": "markdownlint --version",
     "status": "core",
     "notes": "markdown linter for docs",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.48.0",
+    "compat_requires": []
   },
   {
     "name": "imagemagick",
@@ -789,7 +984,9 @@
     "detect": "magick --version",
     "status": "core",
     "notes": "image manipulation/conversion",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "7.1.1",
+    "compat_requires": []
   },
   {
     "name": "ffmpeg",
@@ -800,7 +997,9 @@
     "detect": "ffmpeg -version",
     "status": "core",
     "notes": "audio/video transcoding",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "7.1.4",
+    "compat_requires": []
   },
   {
     "name": "pillow",
@@ -811,7 +1010,11 @@
     "detect": "ipython -c 'import PIL; print(PIL.__version__)'",
     "status": "core",
     "notes": "Python imaging library; injected into ipython for REPL use — use 'uv add pillow' for project code",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "12.2.0",
+    "compat_requires": [
+      "ipython"
+    ]
   },
   {
     "name": "docker",
@@ -822,7 +1025,9 @@
     "detect": "docker --version",
     "status": "core",
     "notes": "Docker Engine (or existing Docker Desktop)",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "29.5.3",
+    "compat_requires": []
   },
   {
     "name": "docker-compose",
@@ -833,7 +1038,9 @@
     "detect": "docker compose version",
     "status": "core",
     "notes": "Compose v2 plugin — invoke as 'docker compose'",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "5.1.4",
+    "compat_requires": []
   },
   {
     "name": "devcontainer",
@@ -844,7 +1051,9 @@
     "detect": "devcontainer --version",
     "status": "core",
     "notes": "Dev Containers CLI",
-    "last_verified": "2026-06-04"
+    "last_verified": "2026-06-08",
+    "installed_version": "0.87.0",
+    "compat_requires": []
   },
   {
     "name": "qemu-system",
@@ -877,7 +1086,10 @@
     "detect": "nvidia-smi -L",
     "status": "optional",
     "notes": "GPU passthrough from Windows host driver; CUDA toolkit/ML libs are project/container scoped",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "sshpass",
@@ -888,7 +1100,10 @@
     "detect": "sshpass -V",
     "status": "core",
     "notes": "non-interactive SSH password auth",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "1.10",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "expect",
@@ -899,7 +1114,10 @@
     "detect": "expect -version",
     "status": "core",
     "notes": "scripted interactive CLI automation",
-    "last_verified": "2026-06-05"
+    "last_verified": "2026-06-08",
+    "installed_version": "5.45.4",
+    "compat_requires": [],
+    "source_repo": ""
   },
   {
     "name": "sdxl-inpaint-checkpoint",
@@ -909,7 +1127,38 @@
     "install_method": "huggingface",
     "detect": "sdxl-inpaint",
     "status": "optional",
-    "notes": "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Canonical: containerized GPU. Exception: if a GPU project venv already exists (e.g. ~/projects/myai/hyperreal/.venv), run from there instead. Download: cd ~/projects/myai/hyperreal && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
-    "last_verified": "2026-06-05"
+    "notes": "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+    "last_verified": "2026-06-08",
+    "installed_version": "",
+    "compat_requires": [],
+    "source_repo": ""
+  },
+  {
+    "name": "nvtop",
+    "binary": "nvtop",
+    "group": "optional-gpu",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "nvtop --version",
+    "status": "optional",
+    "notes": "GPU process monitor (htop for NVIDIA)",
+    "last_verified": "2026-06-08",
+    "installed_version": "3.2.0",
+    "compat_requires": [],
+    "source_repo": ""
+  },
+  {
+    "name": "nvidia-container-toolkit",
+    "binary": "nvidia-ctk",
+    "group": "optional-gpu",
+    "scope": "global",
+    "install_method": "apt",
+    "detect": "nvidia-ctk --version",
+    "status": "optional",
+    "notes": "enables docker run --gpus all; runtime configured via nvidia-ctk",
+    "last_verified": "2026-06-08",
+    "installed_version": "1.19.1",
+    "compat_requires": [],
+    "source_repo": ""
   }
 ]

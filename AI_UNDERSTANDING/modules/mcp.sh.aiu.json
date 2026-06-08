@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "path": "modules/mcp.sh",
+  "sha1": "2881785650e7668ad9da6a7b02a914e2006bbe95",
+  "purpose": "Bootstrap module that installs Node.js dependencies for the devenv MCP server and registers devenv, github, playwright, and context7 server entries in ~/.mcp.json so Claude Code loads them automatically.",
+  "exports": [
+    "mcp_desc",
+    "mcp_install",
+    "mcp_install_deps",
+    "mcp_register"
+  ],
+  "imports": [
+    "lib/common.sh",
+    "mcp-server/index.js"
+  ],
+  "called_by": [
+    "bootstrap.sh"
+  ],
+  "calls_out_to": [
+    "pnpm",
+    "node"
+  ],
+  "invariants": [
+    "pnpm must be installed (node group) before this module runs",
+    "mcp_register is idempotent — existing entries are overwritten with canonical config and unknown entries are preserved",
+    "~/.mcp.json is created with an empty mcpServers object if it does not exist"
+  ],
+  "gotchas": [
+    "mcp_install_deps falls back from pnpm install --frozen-lockfile to pnpm install if the lockfile is out of date",
+    "The inline Node.js script in mcp_register runs with --input-type=module; it merges JSON in-process rather than using jq to preserve key order and avoid shell escaping issues",
+    "Adding new tools to manifest/tools.json makes them available without rerunning this module — only a Claude Code session restart is needed",
+    "github, playwright, and context7 servers are registered alongside devenv but their binaries (gh, npx) must already be on PATH"
+  ],
+  "key_functions": [
+    { "name": "mcp_install_deps", "summary": "Runs pnpm install in mcp-server/ to install @modelcontextprotocol/sdk and its dependencies" },
+    { "name": "mcp_register", "summary": "Idempotently merges devenv, github, playwright, and context7 MCP server entries into ~/.mcp.json using an inline Node.js script" }
+  ]
+}

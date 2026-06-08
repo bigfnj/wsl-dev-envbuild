@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "project": "wsl-dev-envbuild",
-  "last_audit_commit": null,
-  "last_audit_at": null,
+  "last_audit_commit": "3f6c9515e32af5448081b951522a9934f59d13d6",
+  "last_audit_at": "2026-06-08T00:00:00Z",
   "generator": "manual",
-  "overview": "Documents and scripts for building the WSL2 Debian development environment for bigfnj.",
+  "overview": "Idempotent WSL2 Debian dev-environment bootstrap. Installs and tracks 85 globally-scoped tools via manifest/tools.json. Exposes tools via devenv MCP server. Includes devtools CLI for report/check/doctor/outdated/upgrade.",
   "frameworks": [],
   "test_command": "",
   "tracked_globs": {

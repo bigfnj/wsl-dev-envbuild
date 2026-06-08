@@ -89,7 +89,7 @@ languages_record_manifest() {
     if has rustfmt;     then manifest_add rustfmt rustfmt languages global rustup "rustfmt --version"  core "Rust formatter (rustup component)"; fi
     if has cargo-clippy;then manifest_add clippy  cargo-clippy languages global rustup "cargo-clippy --version" core "Rust linter — run via 'cargo clippy'"; fi
     if rustup component list --installed 2>/dev/null | grep -q "^rust-analyzer"; then
-        manifest_add rust-analyzer rust-analyzer languages global rustup "rust-analyzer --version" core "Rust LSP (rustup component) — IDE support"
+        manifest_add rust-analyzer rust-analyzer languages global rustup "rust-analyzer --version" core "Rust LSP (rustup component) — IDE support" "rust"
     fi
     if has go;          then manifest_add go      go      languages global apt    "go version"         core "Go toolchain (incl. gofmt) — trixie apt"; fi
     if has java;        then manifest_add openjdk java    languages global apt    "java --version"     core "OpenJDK (default-jdk) — trixie apt"; fi

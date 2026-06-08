@@ -30,21 +30,22 @@ reverse_apt() {
 }
 
 # radare2 — not in trixie apt; install the official amd64 .deb from GitHub.
+# Pinned to a known-good release. Bump RADARE2_VERSION + SHA256 together after
+# testing, then update source_repo entry for devtools outdated checks.
+RADARE2_VERSION="6.1.6"
+RADARE2_SHA256=""  # set to sha256sum of the .deb after verifying
+
 reverse_radare2() {
     if has r2; then
         log_skip "radare2 already installed ($(r2 -v 2>/dev/null | head -1))"
         return 0
     fi
-    local url deb
-    url="$(curl -fsSL https://api.github.com/repos/radareorg/radare2/releases/latest 2>/dev/null \
-        | jq -r '.assets[] | select(.name|test("^radare2_[0-9].*_amd64\\.deb$")) | .browser_download_url' | head -1)"
-    if [ -z "$url" ]; then
-        log_warn "radare2: could not resolve .deb URL — skipping (alt: git clone radare2 && sys/install.sh)"
-        return 0
-    fi
-    deb="$(mktemp --suffix=.deb)"
-    log_info "downloading radare2 ($(basename "$url"))"
+    if is_dry_run; then log_info "[DRY-RUN] would download radare2 $RADARE2_VERSION"; return 0; fi
+    local url="https://github.com/radareorg/radare2/releases/download/${RADARE2_VERSION}/radare2_${RADARE2_VERSION}_amd64.deb"
+    local deb; deb="$(mktemp --suffix=.deb)"
+    log_info "downloading radare2 $RADARE2_VERSION"
     if curl -fsSL "$url" -o "$deb"; then
+        verify_sha256 "$deb" "$RADARE2_SHA256" || { rm -f "$deb"; return 1; }
         sudo dpkg -i "$deb" >/dev/null 2>&1 || sudo apt-get install -f -y
     else
         log_warn "radare2 download failed — skipping"
@@ -90,6 +91,13 @@ WRAP
 # Ghidra — Java RE suite from the NSA GitHub releases. Extracts to
 # ~/tools/ghidra/<release> and links `ghidra` (GUI launcher) and
 # `ghidra-headless` (analyzeHeadless) into ~/tools/bin.
+# Pinned to a known-good release. Bump GHIDRA_VERSION + GHIDRA_ZIP + SHA256
+# together after testing; verify the tag name at the GitHub releases page.
+GHIDRA_VERSION="12.1"
+GHIDRA_TAG="Ghidra_12.1_build"
+GHIDRA_ZIP="ghidra_12.1_PUBLIC_20260513.zip"
+GHIDRA_SHA256=""  # set to sha256sum of the zip after verifying
+
 reverse_ghidra() {
     if [ -e "$HOME/tools/bin/ghidra" ]; then
         log_skip "ghidra already installed"
@@ -99,18 +107,14 @@ reverse_ghidra() {
         log_warn "ghidra needs a JDK (run the languages group first) — skipping"
         return 0
     fi
-    local url
-    url="$(curl -fsSL https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest 2>/dev/null \
-        | jq -r '.assets[] | select(.name|test("PUBLIC.*\\.zip$")) | .browser_download_url' | head -1)"
-    if [ -z "$url" ]; then
-        log_warn "ghidra: could not resolve release URL — skipping"
-        return 0
-    fi
+    if is_dry_run; then log_info "[DRY-RUN] would download Ghidra $GHIDRA_VERSION (~400MB)"; return 0; fi
+    local url="https://github.com/NationalSecurityAgency/ghidra/releases/download/${GHIDRA_TAG}/${GHIDRA_ZIP}"
     local zip; zip="$(mktemp --suffix=.zip)"
-    log_info "downloading Ghidra ($(basename "$url")) — large, ~400MB"
+    log_info "downloading Ghidra $GHIDRA_VERSION ($GHIDRA_ZIP) — large, ~400MB"
     if ! curl -fsSL "$url" -o "$zip"; then
         log_warn "ghidra download failed — skipping"; rm -f "$zip"; return 0
     fi
+    verify_sha256 "$zip" "$GHIDRA_SHA256" || { rm -f "$zip"; return 1; }
     ensure_dir "$HOME/tools/ghidra"
     unzip -q -o "$zip" -d "$HOME/tools/ghidra"
     rm -f "$zip"
@@ -125,7 +129,7 @@ reverse_ghidra() {
 }
 
 reverse_record_manifest() {
-    if has r2;       then manifest_add radare2  r2       reverse global github-deb "r2 -v"           core "RE framework (official .deb)"; fi
+    if has r2;       then manifest_add radare2  r2       reverse global github-deb "r2 -v"           core "RE framework (official .deb)" "" "radareorg/radare2"; fi
     if has binwalk;  then manifest_add binwalk  binwalk  reverse global apt        "command -v binwalk"  core "firmware/binary extraction"; fi
     if has exiftool; then manifest_add exiftool exiftool reverse global apt        "exiftool -ver"    core "metadata inspection"; fi
     if has tshark;   then manifest_add tshark   tshark   reverse global apt        "tshark --version" core "CLI packet analysis (Wireshark GUI: Windows)"; fi
@@ -136,6 +140,6 @@ reverse_record_manifest() {
     if has file;     then manifest_add file     file     reverse global apt        "file --version"   core "file-type identification"; fi
     if has dosbox-x; then manifest_add dosbox-x dosbox-x reverse global apt        "command -v dosbox-x" core "DOS emulator; run headless via dosbox-x-headless"; fi
     if has frida;    then manifest_add frida    frida    reverse global pipx       "frida --version"  core "dynamic instrumentation"; fi
-    if [ -e "$HOME/tools/bin/ghidra" ]; then manifest_add ghidra ghidra reverse global github-zip "command -v ghidra" core "NSA RE suite; GUI via 'ghidra', headless via 'ghidra-headless'"; fi
+    if [ -e "$HOME/tools/bin/ghidra" ]; then manifest_add ghidra ghidra reverse global github-zip "command -v ghidra" core "NSA RE suite; GUI via 'ghidra', headless via 'ghidra-headless'" "" "NationalSecurityAgency/ghidra"; fi
     log_ok "manifest updated — reverse group"
 }

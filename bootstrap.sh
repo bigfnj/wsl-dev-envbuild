@@ -15,7 +15,7 @@ export REPO_ROOT
 # shellcheck source=lib/common.sh
 . "$REPO_ROOT/lib/common.sh"
 
-DEFAULT_GROUPS=(core python node languages reverse data docs image containers)
+DEFAULT_GROUPS=(core python node languages reverse data docs image containers mcp)
 OPTIONAL_GROUPS=(optional-heavy optional-gpu)
 ALL_GROUPS=("${DEFAULT_GROUPS[@]}" "${OPTIONAL_GROUPS[@]}")
 
@@ -28,6 +28,7 @@ Usage: ./bootstrap.sh [options]
   --only  G1,G2    run only these groups
   --with  G1,G2    run default groups plus these (e.g. optional-gpu)
   --skip  G1,G2    run default groups except these
+  --dry-run        print what would be installed without actually doing it
   --list           list groups and what each installs, then exit
   --help, -h       show this help
 
@@ -91,6 +92,7 @@ main() {
                     [ "$drop" -eq 0 ] && filtered+=("$g")
                 done
                 groups=("${filtered[@]}"); shift 2;;
+            --dry-run) export DRY_RUN=1; log_info "[DRY-RUN] mode — nothing will be installed"; shift;;
             --list) list_groups; exit 0;;
             --help|-h) usage; exit 0;;
             *) log_err "unknown option: $1"; usage; exit 1;;
@@ -100,6 +102,12 @@ main() {
     # Make tools installed earlier in this run (pipx apps, ~/tools/bin links)
     # usable by later modules in the same process, before shellrc is sourced.
     export PATH="$HOME/.local/bin:$HOME/tools/bin:$PATH"
+
+    # Wire up the committed git hooks directory so pre-commit runs devtools check.
+    if [ -d "$REPO_ROOT/.git" ] && [ -d "$REPO_ROOT/hooks" ]; then
+        git -C "$REPO_ROOT" config core.hooksPath hooks
+        log_ok "git hooks -> $REPO_ROOT/hooks"
+    fi
 
     ensure_dir "$LOG_DIR"
     local logfile
@@ -115,6 +123,13 @@ main() {
     # AI agents learn the environment and check it before installing.
     log_group "agent discovery"
     write_agent_discovery
+
+    # Register a weekly cron job that runs `devtools outdated` and logs the
+    # results. Read-only scan only — no auto-upgrade. Check the log at
+    # ~/tools/logs/outdated-weekly.log to see what's available.
+    local cron_cmd="0 9 * * 1 $REPO_ROOT/bin/devtools outdated >> $HOME/tools/logs/outdated-weekly.log 2>&1"
+    ( crontab -l 2>/dev/null | grep -v "devtools outdated" ; printf '%s\n' "$cron_cmd" ) | crontab -
+    log_ok "weekly outdated scan -> Mondays 9am (log: ~/tools/logs/outdated-weekly.log)"
 
     # Stamp the installed environment version so devtools can report it.
     local ver; ver="$(cat "$REPO_ROOT/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "unknown")"

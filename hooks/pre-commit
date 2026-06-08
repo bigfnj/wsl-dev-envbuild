@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Pre-commit: abort the commit if the manifest has drifted from reality.
+# Run `devtools check` — it exits non-zero if any manifest tool is missing.
+set -euo pipefail
+
+SCRIPT="$(readlink -f "${BASH_SOURCE[0]}")"
+REPO_ROOT="$(cd "$(dirname "$SCRIPT")/.." && pwd)"
+DEVTOOLS="$REPO_ROOT/bin/devtools"
+
+printf 'pre-commit: running devtools check...\n'
+if ! "$DEVTOOLS" check; then
+    printf '\npre-commit: BLOCKED — manifest drift detected.\n'
+    printf 'Run: ./bootstrap.sh --only <group> to fix, then re-commit.\n'
+    exit 1
+fi
+printf 'pre-commit: manifest OK\n'

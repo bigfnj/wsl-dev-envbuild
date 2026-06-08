@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# devtools — inspect the dev environment. The agent-discoverability interface.
+# devtools — inspect and upgrade the dev environment.
 #
-#   devtools report   human-readable inventory from manifest/tools.json
-#   devtools check    verify every manifest tool is actually present (drift)
-#   devtools doctor   environment health (PATH, shellrc, runtimes, docker, WSL)
+#   devtools report    human-readable inventory from manifest/tools.json
+#   devtools check     verify every manifest tool is actually present (drift)
+#   devtools doctor    environment health (PATH, shellrc, runtimes, docker, WSL)
+#   devtools outdated  check upstream for newer versions; flag compat constraints
+#   devtools upgrade [name]  upgrade all tools (or one by name) via their install method
 #
 # Self-locating: resolves the manifest relative to this script's real path, so
 # it works whether invoked directly or via the ~/tools/bin/devtools symlink.
-# Read-only — never installs anything; that's bootstrap.sh's job.
+# upgrade is the one mutating subcommand; all others are read-only.
 set -euo pipefail
 
 SCRIPT="$(readlink -f "${BASH_SOURCE[0]}")"
@@ -109,20 +111,329 @@ cmd_doctor() {
     if [ "$issues" -eq 0 ]; then ok "environment healthy"; else warn "$issues issue(s) found"; return 1; fi
 }
 
+cmd_outdated() {
+    require_manifest
+    printf '%sChecking for available updates...%s\n' "$(_c 1)" "$(_c 0)"
+
+    local any=0
+    # Temp file collects names of tools that have updates — used for compat checks.
+    local outdated_file; outdated_file="$(mktemp)"
+    trap 'rm -f "$outdated_file"' RETURN
+
+    # ── apt / docker-apt / nodesource / microsoft-apt ─────────────────────────
+    # Some manifest names differ from the apt package name (e.g. "go" → golang-go,
+    # "gnu-time" → time). When apt-cache policy misses, fall back to dpkg -S on
+    # the binary path to discover the real package name.
+    printf '\n%sapt-managed%s\n' "$(_c 1)" "$(_c 0)"
+    _apt_check() {
+        local pkg="$1"
+        local policy installed candidate
+        policy="$(apt-cache policy "$pkg" 2>/dev/null)"
+        installed="$(printf '%s\n' "$policy" | awk '/Installed:/{print $2; exit}')"
+        candidate="$(printf '%s\n' "$policy" | awk '/Candidate:/{print $2; exit}')"
+        printf '%s\t%s\t%s\n' "$installed" "$candidate" "$pkg"
+    }
+    while IFS=$'\t' read -r name binary; do
+        local installed candidate apt_pkg
+        IFS=$'\t' read -r installed candidate apt_pkg < <(_apt_check "$name")
+
+        # Fallback: if the manifest name isn't a known apt package, look up the
+        # real package via dpkg -S on the binary path.
+        if [ -z "$installed" ] || [ "$installed" = "(none)" ]; then
+            local bin_path; bin_path="$(command -v "$binary" 2>/dev/null || true)"
+            if [ -n "$bin_path" ]; then
+                local real_pkg; real_pkg="$(dpkg -S "$bin_path" 2>/dev/null | cut -d: -f1 | head -1)"
+                if [ -n "$real_pkg" ] && [ "$real_pkg" != "$name" ]; then
+                    IFS=$'\t' read -r installed candidate apt_pkg < <(_apt_check "$real_pkg")
+                fi
+            fi
+        fi
+
+        local label="$name"; [ "$apt_pkg" != "$name" ] && label="$name (pkg: $apt_pkg)"
+        if [ -z "$installed" ] || [ "$installed" = "(none)" ]; then
+            warn "  $label  not found in apt index"
+        elif [ "$installed" != "$candidate" ] && [ -n "$candidate" ] && [ "$candidate" != "(none)" ]; then
+            ok "  $label  $installed → $candidate"
+            printf '%s\n' "$name" >> "$outdated_file"
+            any=$((any+1))
+        else
+            info "  $label  $installed  up to date"
+        fi
+    done < <(jq -r '.[] | select(
+            .install_method == "apt" or
+            .install_method == "docker-apt" or
+            .install_method == "nodesource" or
+            .install_method == "microsoft-apt"
+        ) | "\(.name)\t\(.binary)"' "$MANIFEST")
+
+    # ── pipx (standalone) ─────────────────────────────────────────────────────
+    printf '\n%spipx%s\n' "$(_c 1)" "$(_c 0)"
+    while IFS=$'\t' read -r name installed_ver; do
+        local latest
+        latest="$(curl -fsSL "https://pypi.org/pypi/${name}/json" 2>/dev/null \
+            | jq -r '.info.version // empty')"
+        if [ -z "$latest" ]; then
+            warn "  $name  (PyPI query failed)"
+        elif [ "$installed_ver" = "$latest" ]; then
+            info "  $name  $installed_ver  up to date"
+        else
+            ok "  $name  ${installed_ver:-unknown} → $latest  (pipx upgrade $name)"
+            printf '%s\n' "$name" >> "$outdated_file"
+            any=$((any+1))
+        fi
+    done < <(jq -r '.[] | select(.install_method == "pipx") | "\(.name)\t\(.installed_version // "")"' "$MANIFEST")
+
+    # ── pipx-inject ───────────────────────────────────────────────────────────
+    printf '\n%spipx-inject%s\n' "$(_c 1)" "$(_c 0)"
+    while IFS=$'\t' read -r name host_tool installed_ver; do
+        local latest
+        latest="$(curl -fsSL "https://pypi.org/pypi/${name}/json" 2>/dev/null \
+            | jq -r '.info.version // empty')"
+        if [ -z "$latest" ]; then
+            warn "  $name  (PyPI query failed)"
+        elif [ "$installed_ver" = "$latest" ]; then
+            info "  $name  $installed_ver  up to date (injected into $host_tool)"
+        else
+            ok "  $name  ${installed_ver:-unknown} → $latest  (pipx inject $host_tool $name --force)"
+            printf '%s\n' "$name" >> "$outdated_file"
+            any=$((any+1))
+        fi
+    done < <(jq -r '.[] | select(.install_method == "pipx-inject") | "\(.name)\t\(.binary)\t\(.installed_version // "")"' "$MANIFEST")
+
+    # ── rustup ────────────────────────────────────────────────────────────────
+    printf '\n%srustup%s\n' "$(_c 1)" "$(_c 0)"
+    if command -v rustup >/dev/null 2>&1; then
+        local rustup_out; rustup_out="$(rustup check 2>&1)"
+        printf '%s\n' "$rustup_out" | while read -r line; do
+            case "$line" in
+                *"Update available"*) ok "  $line";;
+                *) info "  $line";;
+            esac
+        done
+        if printf '%s\n' "$rustup_out" | grep -q "Update available"; then
+            printf 'rust\nrustfmt\ncargo\nclippy\nrust-analyzer\n' >> "$outdated_file"
+            any=$((any+1))
+        fi
+    else
+        info "  rustup not installed"
+    fi
+
+    # ── npm global ────────────────────────────────────────────────────────────
+    printf '\n%snpm global%s\n' "$(_c 1)" "$(_c 0)"
+    if command -v npm >/dev/null 2>&1; then
+        local npm_json; npm_json="$(npm outdated -g --json 2>/dev/null || true)"
+        if [ -z "$npm_json" ] || [ "$npm_json" = "{}" ]; then
+            info "  all npm global packages up to date"
+        else
+            while IFS=$'\t' read -r pkg current latest; do
+                ok "  $pkg  $current → $latest  (npm install -g $pkg)"
+                printf '%s\n' "$pkg" >> "$outdated_file"
+                any=$((any+1))
+            done < <(printf '%s\n' "$npm_json" \
+                | jq -r 'to_entries[] | "\(.key)\t\(.value.current)\t\(.value.latest)"')
+        fi
+    else
+        info "  npm not installed"
+    fi
+
+    # ── github releases ───────────────────────────────────────────────────────
+    printf '\n%sgithub releases%s\n' "$(_c 1)" "$(_c 0)"
+    while IFS=$'\t' read -r name installed_ver source_repo; do
+        if [ -n "$source_repo" ] && [ "$source_repo" != "null" ]; then
+            local latest_tag
+            latest_tag="$(curl -fsSL \
+                "https://api.github.com/repos/${source_repo}/releases/latest" 2>/dev/null \
+                | jq -r '.tag_name // empty')"
+            if [ -z "$latest_tag" ]; then
+                warn "  $name  installed: ${installed_ver:-unknown}  (GitHub API query failed for $source_repo)"
+            else
+                # Strip leading 'v' for comparison.
+                local latest_ver; latest_ver="${latest_tag#v}"
+                local inst_ver; inst_ver="${installed_ver#v}"
+                if [ "$inst_ver" = "$latest_ver" ] || [ "$installed_ver" = "$latest_tag" ]; then
+                    info "  $name  $installed_ver  up to date ($source_repo)"
+                else
+                    ok "  $name  ${installed_ver:-unknown} → $latest_tag  (see github.com/$source_repo/releases)"
+                    printf '%s\n' "$name" >> "$outdated_file"
+                    any=$((any+1))
+                fi
+            fi
+        else
+            warn "  $name  installed: ${installed_ver:-unknown}  (no source_repo — check upstream manually)"
+        fi
+    done < <(jq -r '.[] | select(.install_method == "github-zip" or .install_method == "github-deb") | "\(.name)\t\(.installed_version // "")\t\(.source_repo // "")"' "$MANIFEST")
+
+    # ── skipped ───────────────────────────────────────────────────────────────
+    printf '\n%sskipped%s  (unversioned or host-managed)\n' "$(_c 1)" "$(_c 0)"
+    while IFS=$'\t' read -r name method; do
+        info "  $name  [$method]"
+    done < <(jq -r '.[] | select(
+            .install_method == "windows-host-driver" or
+            .install_method == "huggingface" or
+            .install_method == "rustup"
+        ) | "\(.name)\t\(.install_method)"' "$MANIFEST")
+
+    # ── compat warnings ───────────────────────────────────────────────────────
+    if [ -s "$outdated_file" ]; then
+        local compat_header_shown=0
+        while IFS=$'\t' read -r name req; do
+            if grep -qxF "$req" "$outdated_file" 2>/dev/null; then
+                [ "$compat_header_shown" -eq 0 ] && printf '\n%scompat warnings%s\n' "$(_c 33)" "$(_c 0)"
+                compat_header_shown=1
+                warn "  $name  has compat_requires [$req] — upgrade and test together"
+            fi
+        done < <(jq -r '
+            .[]
+            | select((.compat_requires // []) | length > 0)
+            | .name as $n
+            | .compat_requires[]
+            | [$n, .] | @tsv
+        ' "$MANIFEST" 2>/dev/null || true)
+    fi
+
+    # ── summary ───────────────────────────────────────────────────────────────
+    printf '\n'
+    if [ "$any" -eq 0 ]; then
+        ok "all tools up to date"
+    else
+        warn "$any tool group(s) have updates available (see above)"
+    fi
+}
+
+cmd_upgrade() {
+    require_manifest
+    local target="${1:-}"
+
+    # Warn if upgrading $1 affects tools that declare it as a compat_requires.
+    _compat_warn() {
+        local name="$1"
+        local coupled
+        coupled="$(jq -r --arg n "$name" \
+            '[.[] | select((.compat_requires // []) | index($n) != null) | .name] | join(", ")' \
+            "$MANIFEST" 2>/dev/null || true)"
+        [ -n "$coupled" ] && warn "  $name is compat_requires of: $coupled — test together"
+    }
+
+    # Returns 0 if we should process this tool (no target filter, or name matches).
+    _selected() { [ -z "$target" ] || [ "$target" = "$1" ]; }
+
+    local upgraded=0
+
+    # ── apt ───────────────────────────────────────────────────────────────────
+    printf '\n%sapt%s\n' "$(_c 1)" "$(_c 0)"
+    local apt_pkgs=()
+    while IFS=$'\t' read -r name binary; do
+        _selected "$name" || continue
+        local apt_pkg="$name"
+        if ! apt-cache show "$name" >/dev/null 2>&1; then
+            local bin_path; bin_path="$(command -v "$binary" 2>/dev/null || true)"
+            if [ -n "$bin_path" ]; then
+                local real; real="$(dpkg -S "$bin_path" 2>/dev/null | cut -d: -f1 | head -1 || true)"
+                [ -n "$real" ] && apt_pkg="$real"
+            fi
+        fi
+        apt_pkgs+=("$apt_pkg")
+        _compat_warn "$name"
+    done < <(jq -r '.[] | select(
+        .install_method == "apt" or .install_method == "docker-apt" or
+        .install_method == "nodesource" or .install_method == "microsoft-apt"
+    ) | "\(.name)\t\(.binary)"' "$MANIFEST")
+
+    if [ ${#apt_pkgs[@]} -gt 0 ]; then
+        sudo apt-get install --only-upgrade -y "${apt_pkgs[@]}" \
+            && upgraded=$((upgraded+1)) || true
+    else
+        info "  no apt tools selected"
+    fi
+
+    # ── pipx ──────────────────────────────────────────────────────────────────
+    printf '\n%spipx%s\n' "$(_c 1)" "$(_c 0)"
+    if [ -n "$target" ]; then
+        if jq -e --arg t "$target" \
+            '.[] | select(.name==$t and (.install_method=="pipx" or .install_method=="pipx-inject"))' \
+            "$MANIFEST" >/dev/null 2>&1; then
+            _compat_warn "$target"
+            local host; host="$(jq -r --arg t "$target" \
+                '.[] | select(.name==$t and .install_method=="pipx-inject") | .binary' \
+                "$MANIFEST" 2>/dev/null || true)"
+            if [ -n "$host" ]; then
+                pipx inject "$host" "$target" --force && upgraded=$((upgraded+1)) || true
+            else
+                pipx upgrade "$target" && upgraded=$((upgraded+1)) || true
+            fi
+        else
+            info "  $target is not a pipx/pipx-inject tool"
+        fi
+    else
+        while IFS= read -r name; do _compat_warn "$name"; done \
+            < <(jq -r '.[] | select(.install_method=="pipx" or .install_method=="pipx-inject") | .name' "$MANIFEST")
+        pipx upgrade-all && upgraded=$((upgraded+1)) || true
+    fi
+
+    # ── rustup ────────────────────────────────────────────────────────────────
+    local do_rust=0
+    if [ -n "$target" ]; then
+        jq -e --arg t "$target" '.[] | select(.name==$t and .install_method=="rustup")' \
+            "$MANIFEST" >/dev/null 2>&1 && do_rust=1 || true
+    elif command -v rustup >/dev/null 2>&1; then
+        do_rust=1
+    fi
+    if [ "$do_rust" -eq 1 ]; then
+        printf '\n%srustup%s\n' "$(_c 1)" "$(_c 0)"
+        _compat_warn "rust"
+        rustup update && upgraded=$((upgraded+1)) || true
+    fi
+
+    # ── npm global ────────────────────────────────────────────────────────────
+    local do_npm=0
+    if [ -n "$target" ]; then
+        jq -e --arg t "$target" '.[] | select(.name==$t and .install_method=="npm-global")' \
+            "$MANIFEST" >/dev/null 2>&1 && do_npm=1 || true
+    else
+        do_npm=1
+    fi
+    if [ "$do_npm" -eq 1 ]; then
+        printf '\n%snpm global%s\n' "$(_c 1)" "$(_c 0)"
+        if command -v npm >/dev/null 2>&1; then
+            npm update -g && upgraded=$((upgraded+1)) || true
+        else
+            info "  npm not installed"
+        fi
+    fi
+
+    # ── github releases (manual) ──────────────────────────────────────────────
+    local gh_count=0
+    while IFS=$'\t' read -r name group; do
+        _selected "$name" || continue
+        [ "$gh_count" -eq 0 ] && printf '\n%sgithub releases%s  (re-run bootstrap to upgrade)\n' "$(_c 1)" "$(_c 0)"
+        gh_count=$((gh_count+1))
+        warn "  $name — run: ./bootstrap.sh --only $group"
+    done < <(jq -r '.[] | select(.install_method=="github-zip" or .install_method=="github-deb") | "\(.name)\t\(.group)"' "$MANIFEST")
+
+    # ── summary ───────────────────────────────────────────────────────────────
+    printf '\n'
+    ok "$upgraded method group(s) upgraded"
+    info "run 'devtools check' to confirm no drift, 'devtools outdated' to verify"
+}
+
 usage() {
     cat <<EOF
-devtools — inspect the dev environment (read-only)
+devtools — inspect and upgrade the dev environment
 
-  devtools report   human-readable tool inventory (from the manifest)
-  devtools check    verify every manifest tool is installed (drift detection)
-  devtools doctor   environment health: PATH, shellrc, runtimes, docker, WSL
+  devtools report         human-readable tool inventory (from the manifest)
+  devtools check          verify every manifest tool is installed (drift detection)
+  devtools doctor         environment health: PATH, shellrc, runtimes, docker, WSL
+  devtools outdated       check upstream for newer versions; flag compat constraints
+  devtools upgrade [name] upgrade all tools, or just the named one
 EOF
 }
 
 case "${1:-}" in
-    report) cmd_report;;
-    check)  cmd_check;;
-    doctor) cmd_doctor;;
+    report)   cmd_report;;
+    check)    cmd_check;;
+    doctor)   cmd_doctor;;
+    outdated) cmd_outdated;;
+    upgrade)  cmd_upgrade "${2:-}";;
     ""|-h|--help|help) usage;;
     *) bad "unknown command: $1"; usage; exit 1;;
 esac

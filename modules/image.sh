@@ -37,7 +37,7 @@ image_record_manifest() {
     fi
     if has ffmpeg; then manifest_add ffmpeg ffmpeg image global apt "ffmpeg -version" core "audio/video transcoding"; fi
     if ipython -c "import PIL" >/dev/null 2>&1; then
-        manifest_add pillow ipython image global pipx-inject "ipython -c 'import PIL; print(PIL.__version__)'" core "Python imaging library; injected into ipython for REPL use — use 'uv add pillow' for project code"
+        manifest_add pillow ipython image global pipx-inject "ipython -c 'import PIL; print(PIL.__version__)'" core "Python imaging library; injected into ipython for REPL use — use 'uv add pillow' for project code" "ipython"
     fi
     log_ok "manifest updated — image group"
 }

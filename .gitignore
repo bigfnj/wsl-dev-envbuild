@@ -1,0 +1,3 @@
+mcp-server/node_modules/
+*.bak-*
+.github/copilot-instructions.md

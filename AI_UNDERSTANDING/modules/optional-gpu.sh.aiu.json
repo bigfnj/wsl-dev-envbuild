@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "path": "modules/optional-gpu.sh",
+  "sha1": "e0752227cf228c82eefa9c426b4448820a8e2473",
+  "purpose": "Optional bootstrap module for NVIDIA GPU support in WSL2; detects GPU passthrough, installs nvtop and nvidia-container-toolkit, prints canonical setup guidance, and registers an SDXL inpainting checkpoint shim if present.",
+  "exports": [
+    "optional_gpu_desc",
+    "optional_gpu_install",
+    "optional_gpu_nvtop",
+    "optional_gpu_container_toolkit",
+    "_optional_gpu_record_sdxl_inpaint"
+  ],
+  "imports": [
+    "lib/common.sh"
+  ],
+  "called_by": [
+    "bootstrap.sh"
+  ],
+  "calls_out_to": [
+    "nvidia-smi",
+    "apt-get",
+    "curl",
+    "gpg",
+    "sudo",
+    "docker",
+    "nvidia-ctk"
+  ],
+  "invariants": [
+    "This module is opt-in only — never in DEFAULT_GROUPS; must be activated with --with optional-gpu",
+    "Does not auto-install the CUDA toolkit or any GPU ML frameworks — those are project/container scoped",
+    "The entire module is a no-op if nvidia-smi is not present (no GPU passthrough)",
+    "The SDXL checkpoint shim is only written if the HuggingFace cache directory already exists"
+  ],
+  "gotchas": [
+    "The NVIDIA Linux display driver must NOT be installed inside WSL — only the Windows host driver provides GPU passthrough",
+    "nvidia-container-toolkit requires resetting _APT_UPDATED=0 before calling apt_install to force a fresh apt-get update after adding the NVIDIA repo",
+    "docker runtime configuration (nvidia-ctk runtime configure) is skipped if docker daemon is not running at install time — operator must run it manually afterward",
+    "The sdxl-inpaint shim is a test -d script, not a real tool — it exists solely so devtools check and smoke-test can verify checkpoint presence via command -v"
+  ],
+  "key_functions": [
+    { "name": "optional_gpu_install", "summary": "Detects GPU, installs nvtop and container toolkit, prints setup guide, and records manifest entries" },
+    { "name": "optional_gpu_container_toolkit", "summary": "Adds the NVIDIA apt repo, installs nvidia-container-toolkit, and configures the docker runtime if the daemon is running" },
+    { "name": "_optional_gpu_record_sdxl_inpaint", "summary": "Writes a presence-check shim for the SDXL inpainting checkpoint and registers it in the manifest if the HuggingFace cache dir exists" }
+  ]
+}

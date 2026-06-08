@@ -23,6 +23,7 @@ log_group() { printf '\n%s== %s ==%s\n' "$(_c 1)" "$*" "$(_c 0)"; }
 # ── Detection ─────────────────────────────────────────────────────────────────
 has()           { command -v "$1" >/dev/null 2>&1; }
 pkg_installed() { dpkg -s "$1" >/dev/null 2>&1; }
+is_dry_run()    { [ "${DRY_RUN:-0}" = "1" ]; }
 
 # ── apt ───────────────────────────────────────────────────────────────────────
 _APT_UPDATED=0
@@ -43,6 +44,7 @@ apt_install() {
         log_skip "apt: all present ($*)"
         return 0
     fi
+    if is_dry_run; then log_info "[DRY-RUN] would apt install: ${missing[*]}"; return 0; fi
     apt_refresh
     log_info "apt install: ${missing[*]}"
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${missing[@]}"
@@ -58,6 +60,7 @@ pipx_install() {
         log_skip "pipx: $pkg already installed"
         return 0
     fi
+    if is_dry_run; then log_info "[DRY-RUN] would pipx install $pkg"; return 0; fi
     log_info "pipx install $pkg"
     pipx install "$pkg"
 }
@@ -76,6 +79,7 @@ npm_global() {
         log_skip "npm -g: $pkg already present ($bin)"
         return 0
     fi
+    if is_dry_run; then log_info "[DRY-RUN] would npm install -g $pkg"; return 0; fi
     log_info "npm install -g $pkg"
     npm install -g "$pkg"
 }
@@ -149,9 +153,10 @@ This machine is provisioned by wsl-dev-envbuild (repo: $REPO_ROOT).
 ## Before installing anything
 
 Run these first — the tool you want is probably already here:
-  - \`devtools report\`  — full tool inventory
-  - \`devtools check\`   — verify everything is present
-  - \`smoke-test\`       — exercise the toolchain end-to-end
+  - \`devtools report\`    — full tool inventory
+  - \`devtools check\`     — verify everything is present
+  - \`devtools outdated\`  — check for newer versions; flags compat constraints
+  - \`smoke-test\`         — exercise the toolchain end-to-end
 
 Full rules: $REPO_ROOT/docs/agent-rules.md
 
@@ -192,23 +197,97 @@ EOF
     ensure_block "$HOME/CLAUDE.md" "DEVENV_RULES" "$body"
 }
 
+# ── SHA256 verification ───────────────────────────────────────────────────────
+# verify_sha256 <file> <expected_sha256>
+# When expected is empty: warn and print the actual hash (so the operator can
+# pin it), then return 0 (non-blocking). When provided and mismatched: error
+# and return 1, aborting the calling function.
+verify_sha256() {
+    local file="$1" expected="$2"
+    local actual; actual="$(sha256sum "$file" | cut -d' ' -f1)"
+    if [ -z "$expected" ]; then
+        log_warn "SHA256 not pinned for $(basename "$file") — actual: $actual"
+        log_warn "Pin it: set SHA256=\"$actual\" in the module"
+        return 0
+    fi
+    if [ "$actual" != "$expected" ]; then
+        log_err "SHA256 MISMATCH for $(basename "$file")"
+        log_err "  expected: $expected"
+        log_err "  actual:   $actual"
+        return 1
+    fi
+    log_ok "SHA256 verified: $(basename "$file")"
+}
+
 # ── Manifest ──────────────────────────────────────────────────────────────────
-# manifest_add name binary group scope install_method detect status [notes]
+# manifest_add name binary group scope install_method detect status [notes] [compat_requires] [source_repo]
+#
 # Upserts by name into manifest/tools.json (the agent-discoverable inventory).
+#
+# compat_requires: space-separated list of other manifest tool names that must
+# stay version-compatible with this one (e.g. "ipython" for pillow, "rust" for
+# rust-analyzer). devtools outdated uses this to warn when a coupled upgrade is
+# needed. Omit or pass "" to leave unconstrained.
+#
+# source_repo: "owner/repo" GitHub slug. devtools outdated uses this to query
+# the GitHub API for the latest release and compare to installed_version.
 manifest_add() {
-    local name="$1" binary="$2" group="$3" scope="$4" method="$5" detect="$6" status="$7" notes="${8:-}"
+    local name="$1" binary="$2" group="$3" scope="$4" method="$5" detect="$6" status="$7"
+    local notes="${8:-}" compat_requires="${9:-}" source_repo="${10:-}"
+
+    if is_dry_run; then
+        log_info "[DRY-RUN] would manifest_add $name ($binary)"
+        return 0
+    fi
+
     ensure_dir "$(dirname "$MANIFEST")"
     [ -f "$MANIFEST" ] || echo '[]' > "$MANIFEST"
+
+    # Capture installed version: run the detect command, pull the first
+    # semver-like token from its output. Empty string when detection fails.
+    local installed_version=""
+    if [ -n "$detect" ]; then
+        installed_version="$(bash -c "$detect" 2>/dev/null \
+            | grep -oE '[0-9]+\.[0-9]+[.0-9]*' | head -1 || true)"
+    fi
+
+    # Convert optional space-separated compat list to a JSON array.
+    local compat_json="[]"
+    if [ -n "$compat_requires" ]; then
+        compat_json="$(printf '%s' "$compat_requires" \
+            | tr ' ' '\n' | jq -R . | jq -sc .)"
+    fi
+
     local tmp; tmp="$(mktemp)"
     jq \
-        --arg name "$name" --arg binary "$binary" --arg group "$group" \
-        --arg scope "$scope" --arg method "$method" --arg detect "$detect" \
-        --arg status "$status" --arg notes "$notes" --arg today "$TODAY" '
+        --arg  name              "$name"              \
+        --arg  binary            "$binary"            \
+        --arg  group             "$group"             \
+        --arg  scope             "$scope"             \
+        --arg  method            "$method"            \
+        --arg  detect            "$detect"            \
+        --arg  status            "$status"            \
+        --arg  notes             "$notes"             \
+        --arg  today             "$TODAY"             \
+        --arg  installed_version "$installed_version" \
+        --arg  source_repo       "$source_repo"       \
+        --argjson compat_requires "$compat_json" '
         . as $arr
         | ($arr | map(.name) | index($name)) as $i
-        | { name:$name, binary:$binary, group:$group, scope:$scope,
-            install_method:$method, detect:$detect, status:$status,
-            notes:$notes, last_verified:$today } as $entry
+        | {
+            name:              $name,
+            binary:            $binary,
+            group:             $group,
+            scope:             $scope,
+            install_method:    $method,
+            detect:            $detect,
+            status:            $status,
+            notes:             $notes,
+            last_verified:     $today,
+            installed_version: $installed_version,
+            compat_requires:   $compat_requires,
+            source_repo:       $source_repo
+          } as $entry
         | if $i == null then $arr + [$entry] else ($arr | .[$i] = $entry) end
     ' "$MANIFEST" > "$tmp" && mv "$tmp" "$MANIFEST"
 }
