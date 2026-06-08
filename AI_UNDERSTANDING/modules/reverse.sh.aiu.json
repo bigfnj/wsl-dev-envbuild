@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "path": "modules/reverse.sh",
-  "sha1": "df4b5256126df9fa85a22ed1feeb3a20abf1a978",
+  "sha1": "80669d91e273550fbea34ada14fbd04cf61b8bb8",
   "purpose": "Bootstrap module for the reverse-engineering and binary-analysis toolkit; installs apt tools, radare2 .deb, frida via pipx, a headless DOSBox-X wrapper, and Ghidra from GitHub releases.",
   "exports": [
     "reverse_desc",

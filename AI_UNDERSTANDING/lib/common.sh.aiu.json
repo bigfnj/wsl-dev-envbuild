@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "path": "lib/common.sh",
-  "sha1": "50f366da20600af920755a35b1659fe0bc594644",
+  "sha1": "a03cd7e65abd2049c81e6a5156f133ac043f65b2",
   "purpose": "Shared library sourced by bootstrap.sh and every module; defines logging, detection, idempotent install helpers, manifest upsert logic, and agent-discovery file writers — never executes on its own.",
   "exports": [
     "log_info",
@@ -21,6 +21,7 @@
     "backup_file",
     "ensure_line",
     "ensure_block",
+    "is_wsl",
     "write_agent_discovery",
     "verify_sha256",
     "manifest_add",
@@ -77,7 +78,8 @@
     { "name": "npm_global", "summary": "Installs a global npm CLI into ~/.local prefix without sudo, idempotently" },
     { "name": "manifest_add", "summary": "Upserts a tool entry into manifest/tools.json, capturing the current installed version via the detect command" },
     { "name": "ensure_block", "summary": "Idempotently maintains an HTML-comment-fenced block in a file, replacing it in-place or appending if absent" },
-    { "name": "write_agent_discovery", "summary": "Writes install-rules and tool-inventory guidance into ~/AGENTS.md and ~/CLAUDE.md via marker-fenced blocks" },
+    { "name": "is_wsl", "summary": "Returns 0 if running inside WSL by checking /proc/version for 'Microsoft'; used to gate WSL-specific code paths" },
+    { "name": "write_agent_discovery", "summary": "Writes install-rules and tool-inventory guidance referencing ai-dev-envbuild into ~/AGENTS.md and ~/CLAUDE.md via marker-fenced blocks" },
     { "name": "verify_sha256", "summary": "Checks a file's SHA256 against an expected value; warns and returns 0 if expected is empty, errors if mismatched" }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "path": "VERSION",
+  "sha1": "cf744bd007850b04601dc865815ec0f5e60c6970",
+  "purpose": "Single-line semver file containing the current release version of ai-dev-envbuild (currently 1.2.0); read by bootstrap.sh to stamp ~/tools/env-version and by devtools doctor to detect version drift after a git pull.",
+  "exports": [],
+  "imports": [],
+  "called_by": [],
+  "calls_out_to": [],
+  "invariants": [
+    "Contains exactly one line: a semver string with no trailing whitespace",
+    "Must be bumped whenever a new tool is added or a group is meaningfully changed"
+  ],
+  "gotchas": [
+    "devtools doctor compares this file against ~/tools/env-version — a mismatch means bootstrap.sh has not been rerun after the last git pull",
+    "The version in README.md's header badge and the MCP server's package.json should be kept in sync with this file"
+  ],
+  "key_functions": []
+}

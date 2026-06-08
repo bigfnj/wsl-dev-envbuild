@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "path": "bootstrap.sh",
-  "sha1": "1436a91e5be9b62b7e45c1512617dc710675472a",
-  "purpose": "Idempotent entry-point that orchestrates the full WSL2 dev-environment installation by sourcing and running each module group in order, then wiring git hooks, registering a weekly cron job, and stamping the environment version.",
+  "sha1": "c247ee5424ae77af4cb2b19284038e36be265e17",
+  "purpose": "Idempotent entry-point that orchestrates the full Debian/Ubuntu/WSL2 dev-environment installation by sourcing and running each module group in order, then wiring git hooks, registering a weekly cron job (when crontab is available), and stamping the environment version.",
   "exports": [],
   "imports": [
     "lib/common.sh",
@@ -37,7 +37,7 @@
     "--only accepts comma-separated group names and replaces the entire default group list, so omitting a group skips its manifest entries",
     "Module functions are resolved by convention (group name with hyphens replaced by underscores + _install suffix) — a missing function only warns, not errors",
     "stdout and stderr are tee'd to a timestamped log file under ~/tools/logs/ for the full run",
-    "The weekly cron entry for devtools outdated is unconditionally rewritten on each bootstrap run, replacing any previous one"
+    "The weekly cron entry for devtools outdated is skipped entirely if crontab is not available on the system — no error is raised"
   ],
   "key_functions": [
     { "name": "main", "summary": "Parses CLI flags, runs selected module groups, writes agent discovery files, registers cron, and stamps the version" },

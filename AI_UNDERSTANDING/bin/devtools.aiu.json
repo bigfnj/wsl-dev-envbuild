@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "path": "bin/devtools",
-  "sha1": "13303f47178e0ea8bc9f16a4cfb45048d923f60f",
+  "sha1": "99c1b29f999e3d85b206116aef7851107e936f2f",
   "purpose": "CLI entry-point for inspecting and upgrading the dev environment; provides report, check, doctor, outdated, and upgrade subcommands backed by manifest/tools.json.",
   "exports": [
     "cmd_report",
@@ -44,7 +44,7 @@
   "key_functions": [
     { "name": "cmd_report", "summary": "Prints a grouped, human-readable inventory of all tools from the manifest" },
     { "name": "cmd_check", "summary": "Verifies every manifest tool binary is present on PATH; exits 1 on drift" },
-    { "name": "cmd_doctor", "summary": "Checks PATH, shellrc wiring, rust env, WSL filesystem location, docker daemon, version stamp, and manifest drift" },
+    { "name": "cmd_doctor", "summary": "Checks PATH, shellrc wiring, rust env, docker daemon, version stamp, and manifest drift; the /mnt/* filesystem check is only performed on WSL (detected via /proc/version)" },
     { "name": "cmd_outdated", "summary": "Queries apt, PyPI, GitHub API, rustup, and npm for newer versions and prints a per-tool diff" },
     { "name": "cmd_upgrade", "summary": "Upgrades all tools (or a named one) via their respective install method with compat warnings" }
   ]

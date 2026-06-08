@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "path": "modules/image.sh",
+  "sha1": "73bbcdc061b5ff23348a104e57ea2fa785347276",
+  "purpose": "Bootstrap module for the image group; installs imagemagick and ffmpeg via apt as global CLI tools, and injects Pillow into ipython's pipx environment so it's available in the global REPL without polluting system Python.",
+  "exports": [
+    "image_desc",
+    "image_install",
+    "image_pillow",
+    "image_record_manifest"
+  ],
+  "imports": [
+    "lib/common.sh"
+  ],
+  "called_by": [
+    "bootstrap.sh"
+  ],
+  "calls_out_to": [
+    "apt-get",
+    "pipx",
+    "ipython"
+  ],
+  "invariants": [
+    "imagemagick and ffmpeg are always global (apt); no Python imaging libraries are installed globally",
+    "Pillow is only injected if ipython is already installed — a warning is logged and the step is skipped otherwise",
+    "Pillow injection is idempotent: skipped with log_skip if 'import PIL' succeeds in the ipython env",
+    "Python imaging libraries (OpenCV, scikit-image, Pillow for project use) are project-local via uv — never global"
+  ],
+  "gotchas": [
+    "ImageMagick 7 ships the 'magick' driver binary; older versions used 'convert' — image_record_manifest checks for magick first and falls back to convert for the manifest binary field",
+    "Pillow is a library, not a CLI — it cannot go in ~/tools/bin; pipx inject is the only correct global install path for REPL use",
+    "pipx inject is not idempotent by default; the has check (ipython -c 'import PIL') gates the inject call to avoid duplicate injection",
+    "The python group (ipython) must run before the image group for Pillow injection to succeed — bootstrap.sh ordering enforces this"
+  ],
+  "key_functions": [
+    { "name": "image_pillow", "summary": "Injects Pillow into the ipython pipx environment via 'pipx inject ipython Pillow' — skipped if ipython is absent or Pillow is already importable" },
+    { "name": "image_record_manifest", "summary": "Upserts manifest entries for imagemagick (using 'magick' or 'convert' binary), ffmpeg, and Pillow (via ipython detect) if present" }
+  ]
+}

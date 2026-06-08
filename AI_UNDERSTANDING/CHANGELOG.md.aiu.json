@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "path": "CHANGELOG.md",
+  "sha1": "27328c7e1052efa736d729c5a2ec396942abeda4",
+  "purpose": "Keep-a-Changelog formatted record of all notable changes to ai-dev-envbuild, organized by semver version with Added/Changed sections; current stable is 1.2.0.",
+  "exports": [],
+  "imports": [],
+  "called_by": [],
+  "calls_out_to": [],
+  "invariants": [
+    "Format follows Keep a Changelog 1.1.0 (https://keepachangelog.com/en/1.1.0/)",
+    "Each released version has a GitHub compare link at the bottom of the file",
+    "Versions are listed newest-first"
+  ],
+  "gotchas": [
+    "The [Unreleased] section must be kept even when empty — it is the staging area for the next release",
+    "Version 1.2.0 introduced source_repo field in manifest, --dry-run flag, git hooks wiring, hooks/pre-commit, mcp-server/denylist.json, and .github/workflows/ci.yml"
+  ],
+  "key_functions": []
+}
