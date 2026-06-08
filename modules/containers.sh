@@ -58,7 +58,7 @@ containers_docker_service() {
             log_warn "could not enable docker service via systemd — start it manually"
         fi
     else
-        log_warn "no systemd in this WSL — start the daemon with 'sudo dockerd &', or enable systemd in /etc/wsl.conf ([boot] systemd=true) and restart WSL"
+        log_warn "no systemd — start Docker manually with 'sudo dockerd &'; on WSL2 enable systemd via /etc/wsl.conf ([boot] systemd=true) and restart WSL; on native Linux check your init system"
     fi
 }
 

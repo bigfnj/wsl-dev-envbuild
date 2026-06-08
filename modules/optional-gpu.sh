@@ -13,8 +13,13 @@ optional_gpu_desc() { echo "NVIDIA GPU: nvtop, nvidia-container-toolkit, detecti
 
 optional_gpu_install() {
     if ! has nvidia-smi; then
-        log_warn "no nvidia-smi — no GPU passthrough detected in this WSL."
-        log_info "To enable: install the NVIDIA driver on the WINDOWS host (the WSL CUDA stack rides on it — do NOT install a Linux NVIDIA driver inside WSL), then restart WSL."
+        if is_wsl; then
+            log_warn "no nvidia-smi — no GPU passthrough detected."
+            log_info "To enable: install the NVIDIA driver on the Windows host (the WSL CUDA stack rides on it — do NOT install a Linux NVIDIA driver inside WSL), then restart WSL."
+        else
+            log_warn "no nvidia-smi — NVIDIA GPU driver not installed."
+            log_info "To enable: install the NVIDIA driver from https://www.nvidia.com/Download/index.aspx or via your distro's package manager."
+        fi
         return 0
     fi
 
@@ -36,7 +41,7 @@ GPU path summary:
      Put PyTorch/TensorFlow in the container image, not the host.
 
   2. Native CUDA toolkit (only if you build CUDA C code on the host)
-     Use NVIDIA's WSL CUDA repo (omits the display driver):
+     Use NVIDIA's CUDA installer (on WSL, omits the display driver):
        https://developer.nvidia.com/cuda-downloads
      Project Python GPU libs still go in a project .venv via uv:
        uv add torch --index https://download.pytorch.org/whl/cu124
@@ -48,9 +53,15 @@ GPU path summary:
 
 GUIDE
 
-    manifest_add nvidia-smi nvidia-smi optional-gpu global windows-host-driver \
-        "nvidia-smi -L" optional \
-        "GPU passthrough from Windows host driver; CUDA toolkit/ML libs are project/container scoped"
+    if is_wsl; then
+        manifest_add nvidia-smi nvidia-smi optional-gpu global windows-host-driver \
+            "nvidia-smi -L" optional \
+            "GPU available via Windows host driver passthrough; CUDA toolkit/ML libs are project/container scoped"
+    else
+        manifest_add nvidia-smi nvidia-smi optional-gpu global apt \
+            "nvidia-smi -L" optional \
+            "GPU available via local NVIDIA driver; CUDA toolkit/ML libs are project/container scoped"
+    fi
     if has nvtop; then
         manifest_add nvtop nvtop optional-gpu global apt \
             "nvtop --version" optional "GPU process monitor (htop for NVIDIA)"

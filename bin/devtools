@@ -79,11 +79,13 @@ cmd_doctor() {
     if grep -q 'tools/shellrc.sh' "$HOME/.bashrc" 2>/dev/null; then ok ".bashrc sources ~/tools/shellrc.sh"; else warn ".bashrc does not source ~/tools/shellrc.sh"; issues=$((issues+1)); fi
     # rust env (optional)
     if [ -f "$HOME/.cargo/env" ]; then ok "rust toolchain env present"; else info "no rust env (rustup not installed)"; fi
-    # WSL filesystem location
-    case "$PWD" in
-        /mnt/*) warn "cwd is under $PWD (Windows filesystem) — slow I/O + broken file-watchers; prefer ~/projects"; issues=$((issues+1));;
-        *)      ok "cwd is on the Linux filesystem";;
-    esac
+    # WSL filesystem location — only /mnt/* is meaningful on WSL2; skip on native Linux
+    if grep -qiE "microsoft|wsl" /proc/version 2>/dev/null; then
+        case "$PWD" in
+            /mnt/*) warn "cwd is under $PWD (Windows filesystem) — slow I/O + broken file-watchers; prefer ~/projects"; issues=$((issues+1));;
+            *)      ok "cwd is on the Linux filesystem";;
+        esac
+    fi
     # docker daemon
     if command -v docker >/dev/null 2>&1; then
         if docker info >/dev/null 2>&1; then ok "docker daemon reachable"; else warn "docker installed but daemon unreachable (start it, or re-login for the docker group)"; issues=$((issues+1)); fi

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to wsl-dev-envbuild are documented here.
+All notable changes to ai-dev-envbuild are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
@@ -54,7 +54,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `manifest/tools.json` — machine-readable tool inventory.
 - Agent auto-discovery via `write_agent_discovery()` (AGENTS.md + CLAUDE.md).
 
-[Unreleased]: https://github.com/bigfnj/wsl-dev-envbuild/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/bigfnj/wsl-dev-envbuild/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/bigfnj/wsl-dev-envbuild/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/bigfnj/wsl-dev-envbuild/releases/tag/v1.0.0
+[Unreleased]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/bigfnj/ai-dev-envbuild/releases/tag/v1.0.0

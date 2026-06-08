@@ -1,4 +1,4 @@
-# Architecture — WSL2 Debian Swiss-Army Dev Environment
+# Architecture — Debian/Ubuntu/WSL2 Swiss-Army Dev Environment
 
 This document is the **why**. It locks the design decisions that every
 `bootstrap.sh` module and helper script must follow. Read this before adding a
@@ -8,12 +8,12 @@ tool or changing an install method.
 
 ## 1. Executive summary
 
-A single git repo reproduces a complete WSL2 Debian development workstation in
+A single git repo reproduces a complete Debian/Ubuntu/WSL2 development workstation in
 one command:
 
 ```bash
-git clone git@github.com:bigfnj/wsl-dev-envbuild.git
-cd wsl-dev-envbuild
+git clone git@github.com:bigfnj/ai-dev-envbuild.git
+cd ai-dev-envbuild
 ./bootstrap.sh
 ```
 
@@ -71,7 +71,7 @@ current versions and per-user upgrades without `sudo`.
 The repo (this sub-project):
 
 ```text
-wsl-dev-envbuild/
+ai-dev-envbuild/
   bootstrap.sh            entry point — runs install groups in order
   lib/
     common.sh             shared helpers: logging, has(), apt_install(), backup()

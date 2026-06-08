@@ -24,6 +24,7 @@ log_group() { printf '\n%s== %s ==%s\n' "$(_c 1)" "$*" "$(_c 0)"; }
 has()           { command -v "$1" >/dev/null 2>&1; }
 pkg_installed() { dpkg -s "$1" >/dev/null 2>&1; }
 is_dry_run()    { [ "${DRY_RUN:-0}" = "1" ]; }
+is_wsl()        { grep -qiE "microsoft|wsl" /proc/version 2>/dev/null; }
 
 # ── apt ───────────────────────────────────────────────────────────────────────
 _APT_UPDATED=0
@@ -146,9 +147,9 @@ ensure_block() {
 write_agent_discovery() {
     local body
     body="$(cat <<EOF
-# Dev environment — wsl-dev-envbuild (machine-wide)
+# Dev environment — ai-dev-envbuild (machine-wide)
 
-This machine is provisioned by wsl-dev-envbuild (repo: $REPO_ROOT).
+This machine is provisioned by ai-dev-envbuild (repo: $REPO_ROOT).
 
 ## Before installing anything
 

@@ -1,15 +1,15 @@
-# wsl-dev-envbuild
+# ai-dev-envbuild
 
-> **Environment version: 1.1.0** — run `devtools report` to see what's installed, `devtools doctor` to check for drift.
+> **Environment version: 1.2.0** — run `devtools report` to see what's installed, `devtools doctor` to check for drift.
 
-Reproducible, idempotent, agent-discoverable **WSL2 Debian development
+Reproducible, idempotent, agent-discoverable **Debian/Ubuntu/WSL2 development
 environment** — a broad "Swiss army knife" workstation (modern dev, legacy
 modernization, reverse engineering, image/media, office/PDF, data science, web
 research) provisioned from one command.
 
 ```bash
-git clone git@github.com:bigfnj/wsl-dev-envbuild.git
-cd wsl-dev-envbuild
+git clone git@github.com:bigfnj/ai-dev-envbuild.git
+cd ai-dev-envbuild
 ./bootstrap.sh
 ```
 
@@ -59,7 +59,7 @@ After bootstrap, `devtools` is on your PATH (read-only; it never installs):
 ```bash
 devtools report   # human-readable inventory, grouped by install group
 devtools check    # verify every manifest tool is present (drift detection)
-devtools doctor   # PATH, shellrc, runtimes, docker daemon, WSL filesystem health
+devtools doctor   # PATH, shellrc, runtimes, docker daemon health
 ```
 
 The inventory lives in [`manifest/tools.json`](manifest/tools.json) — the source
@@ -70,7 +70,7 @@ of truth agents consult before installing anything. Agent rules:
 
 The bootstrap writes a marker-fenced block into `~/AGENTS.md` and `~/CLAUDE.md`
 (machine-wide — Codex and Claude walk up to `$HOME`). So every AI session reads,
-up front: this machine is provisioned by wsl-dev-envbuild; run `devtools report`
+up front: this machine is provisioned by ai-dev-envbuild; run `devtools report`
 / `devtools check` / `smoke-test` before installing; follow the uv/pnpm and
 global-vs-local rules. The block is idempotent and uses distinct markers, so it
 coexists with the AI Context Runner extension's own injected blocks. A good way
@@ -123,11 +123,11 @@ managers manage their own (e.g. `~/.cargo/bin`).
 
 ## Requirements
 
-- WSL2 with a Debian (trixie) distribution
-- `sudo` access inside WSL
+- Debian (trixie) or Ubuntu (24.04+), either native or via WSL2
+- `sudo` access
 - Internet access for package downloads
-- Recommended: enable systemd in `/etc/wsl.conf` (`[boot]\nsystemd=true`) so the
-  Docker daemon starts automatically
+- WSL2: recommended to enable systemd in `/etc/wsl.conf` (`[boot] systemd=true`)
+  so the Docker daemon starts automatically
 
 ## Versioning
 

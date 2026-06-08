@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# WSL2 Debian dev-environment bootstrap — idempotent, modular, agent-discoverable.
+# Debian/Ubuntu/WSL2 dev-environment bootstrap — idempotent, modular, agent-discoverable.
 # Reproduces the full workstation on a fresh machine. See docs/architecture.md.
 #
 #   ./bootstrap.sh                 run all default groups
@@ -127,9 +127,14 @@ main() {
     # Register a weekly cron job that runs `devtools outdated` and logs the
     # results. Read-only scan only — no auto-upgrade. Check the log at
     # ~/tools/logs/outdated-weekly.log to see what's available.
-    local cron_cmd="0 9 * * 1 $REPO_ROOT/bin/devtools outdated >> $HOME/tools/logs/outdated-weekly.log 2>&1"
-    ( crontab -l 2>/dev/null | grep -v "devtools outdated" ; printf '%s\n' "$cron_cmd" ) | crontab -
-    log_ok "weekly outdated scan -> Mondays 9am (log: ~/tools/logs/outdated-weekly.log)"
+    if command -v crontab >/dev/null 2>&1; then
+        local cron_cmd="0 9 * * 1 $REPO_ROOT/bin/devtools outdated >> $HOME/tools/logs/outdated-weekly.log 2>&1"
+        ( crontab -l 2>/dev/null | grep -v "devtools outdated" ; printf '%s\n' "$cron_cmd" ) | crontab - \
+            && log_ok "weekly outdated scan -> Mondays 9am (log: ~/tools/logs/outdated-weekly.log)" \
+            || log_warn "crontab failed — weekly outdated scan not registered"
+    else
+        log_info "crontab not available — weekly outdated scan not registered (install cron or use a systemd timer)"
+    fi
 
     # Stamp the installed environment version so devtools can report it.
     local ver; ver="$(cat "$REPO_ROOT/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "unknown")"
