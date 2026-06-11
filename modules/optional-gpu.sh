@@ -36,10 +36,16 @@ GPU path summary:
      Project Python GPU libs still go in a project .venv via uv:
        uv add torch --index https://download.pytorch.org/whl/cu124
 
-  3. SDXL inpainting checkpoint (~7 GB, optional)
-     cd <your-gpu-project>
-     uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1
-     Re-run ./bootstrap.sh --only optional-gpu after to register in manifest.
+  3. Image-gen model checkpoints (large, optional, never auto-downloaded)
+     Recorded in the manifest only when already present in the HF cache; this
+     module never pulls weights itself. Fetch into a GPU project, then re-run
+     ./bootstrap.sh --only optional-gpu to register them:
+       cd <your-gpu-project>
+       uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1  # ~20 GB, OpenRAIL++
+       uv run hf download black-forest-labs/FLUX.1-Fill-dev                 # ~55 GB, FLUX.1 [dev] NON-COMMERCIAL license
+     Project-local model files (e.g. a RealESRGAN .pth in a project's models/
+     dir) are NOT machine-wide — document those in the project's own MODELS.md,
+     not here.
 
 GUIDE
 
@@ -74,6 +80,7 @@ GUIDE
     # iopaint installs regardless of GPU presence — works on CPU, much faster on GPU.
     optional_gpu_iopaint
     _optional_gpu_record_sdxl_inpaint
+    _optional_gpu_record_flux_fill
     if has iopaint; then
         manifest_add iopaint iopaint optional-gpu global pipx \
             "command -v iopaint" optional \
@@ -146,6 +153,26 @@ SHIM
         chmod +x "$shim"
         manifest_add sdxl-inpaint-checkpoint sdxl-inpaint optional-gpu container huggingface \
             "sdxl-inpaint" optional \
-            "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
+            "SDXL inpainting checkpoint (~20 GB on disk: fp16+fp32 variants cached; 9-ch UNet); clean mask seams vs standard inpainting. License: OpenRAIL++. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
+    fi
+}
+
+# FLUX.1-Fill-dev — large text-to-image inpaint/outpaint checkpoint. Recorded
+# only when already present in the HF cache (this module never downloads the
+# ~55 GB of weights). Mirrors the SDXL recorder: a presence-check shim lets
+# devtools check / smoke-test verify it with a real binary. NOTE: FLUX.1 [dev]
+# is under a NON-COMMERCIAL license — flagged in the manifest note.
+_optional_gpu_record_flux_fill() {
+    local hf_dir="$HOME/.cache/huggingface/hub/models--black-forest-labs--FLUX.1-Fill-dev"
+    if [ -d "$hf_dir" ]; then
+        local shim="$HOME/tools/bin/flux-fill-dev"
+        cat > "$shim" <<SHIM
+#!/usr/bin/env bash
+test -d "$hf_dir"
+SHIM
+        chmod +x "$shim"
+        manifest_add flux-fill-dev-checkpoint flux-fill-dev optional-gpu container huggingface \
+            "flux-fill-dev" optional \
+            "FLUX.1-Fill-dev inpaint/outpaint checkpoint (~55 GB on disk: transformer + T5/CLIP text encoders + VAE). 4-bit NF4 quant fits ~24 GB VRAM. LICENSE: FLUX.1 [dev] NON-COMMERCIAL. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download black-forest-labs/FLUX.1-Fill-dev"
     fi
 }

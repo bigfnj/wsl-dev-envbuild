@@ -1112,7 +1112,7 @@
     "detect": "nvidia-smi -L",
     "status": "optional",
     "notes": "GPU available via Windows host driver passthrough; CUDA toolkit/ML libs are project/container scoped",
-    "last_verified": "2026-06-08",
+    "last_verified": "2026-06-10",
     "installed_version": "",
     "compat_requires": [],
     "source_repo": ""
@@ -1153,8 +1153,8 @@
     "install_method": "huggingface",
     "detect": "sdxl-inpaint",
     "status": "optional",
-    "notes": "SDXL inpainting checkpoint (~7 GB, 9-ch UNet); clean mask seams vs standard inpainting. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
-    "last_verified": "2026-06-08",
+    "notes": "SDXL inpainting checkpoint (~20 GB on disk: fp16+fp32 variants cached; 9-ch UNet); clean mask seams vs standard inpainting. License: OpenRAIL++. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+    "last_verified": "2026-06-10",
     "installed_version": "",
     "compat_requires": [],
     "source_repo": ""
@@ -1168,8 +1168,8 @@
     "detect": "nvtop --version",
     "status": "optional",
     "notes": "GPU process monitor (htop for NVIDIA)",
-    "last_verified": "2026-06-08",
-    "installed_version": "3.2.0",
+    "last_verified": "2026-06-10",
+    "installed_version": "3.0.2",
     "compat_requires": [],
     "source_repo": ""
   },
@@ -1182,7 +1182,7 @@
     "detect": "nvidia-ctk --version",
     "status": "optional",
     "notes": "enables docker run --gpus all; runtime configured via nvidia-ctk",
-    "last_verified": "2026-06-08",
+    "last_verified": "2026-06-10",
     "installed_version": "1.19.1",
     "compat_requires": [],
     "source_repo": ""
@@ -1308,7 +1308,7 @@
     "detect": "command -v iopaint",
     "status": "optional",
     "notes": "AI inpainting: object/person/background removal (LaMa, MAT, SD models; GPU recommended for speed)",
-    "last_verified": "2026-06-08",
+    "last_verified": "2026-06-10",
     "installed_version": "",
     "compat_requires": [],
     "source_repo": ""
@@ -1324,6 +1324,20 @@
     "notes": "HuggingFace model/dataset/repo management (hf download, hf upload, hf whoami, hf models ls); also installs tiny-agents",
     "last_verified": "2026-06-08",
     "installed_version": "3.2",
+    "compat_requires": [],
+    "source_repo": ""
+  },
+  {
+    "name": "flux-fill-dev-checkpoint",
+    "binary": "flux-fill-dev",
+    "group": "optional-gpu",
+    "scope": "container",
+    "install_method": "huggingface",
+    "detect": "flux-fill-dev",
+    "status": "optional",
+    "notes": "FLUX.1-Fill-dev inpaint/outpaint checkpoint (~55 GB on disk: transformer + T5/CLIP text encoders + VAE). 4-bit NF4 quant fits ~24 GB VRAM. LICENSE: FLUX.1 [dev] NON-COMMERCIAL. Canonical: containerized GPU. Exception: if a GPU project venv exists, run from there instead. Download: cd <your-gpu-project> && uv run hf download black-forest-labs/FLUX.1-Fill-dev",
+    "last_verified": "2026-06-10",
+    "installed_version": "",
     "compat_requires": [],
     "source_repo": ""
   }

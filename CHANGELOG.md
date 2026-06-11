@@ -5,6 +5,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.3.1] — 2026-06-10
+
+### Added
+- `optional-gpu` now records the **FLUX.1-Fill-dev** checkpoint
+  (`flux-fill-dev-checkpoint`, ~55 GB, FLUX.1 [dev] non-commercial license) in
+  the manifest via a presence-shim — recorded only when already cached, never
+  auto-downloaded — matching the existing SDXL-inpaint pattern.
+
+### Changed
+- Corrected the SDXL-inpaint checkpoint size note (~7 GB → ~20 GB on disk;
+  fp16+fp32 variants cached) and added its OpenRAIL++ license.
+- `optional-gpu` guidance block now lists the image-gen checkpoints with
+  accurate sizes + licenses and clarifies that project-local model files (e.g. a
+  RealESRGAN `.pth`) are documented in the project's own `MODELS.md`, not the
+  machine manifest.
+
 ## [1.3.0] — 2026-06-10
 
 ### Added
@@ -82,7 +98,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `manifest/tools.json` — machine-readable tool inventory.
 - Agent auto-discovery via `write_agent_discovery()` (AGENTS.md + CLAUDE.md).
 
-[Unreleased]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/bigfnj/ai-dev-envbuild/compare/v1.0.0...v1.1.0
