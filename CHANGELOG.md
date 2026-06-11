@@ -20,6 +20,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   accurate sizes + licenses and clarifies that project-local model files (e.g. a
   RealESRGAN `.pth`) are documented in the project's own `MODELS.md`, not the
   machine manifest.
+- Docs de-staled: README layout + `docs/architecture.md` folder structure now
+  include `mcp.sh`, `mcp-server/`, `bin/smoke-test`, `hooks/pre-commit`,
+  `VERSION`, and `CHANGELOG.md`; README documents `devtools outdated`.
 
 ## [1.3.0] — 2026-06-10
 

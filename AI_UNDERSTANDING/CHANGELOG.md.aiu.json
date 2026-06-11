@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "path": "CHANGELOG.md",
-  "sha1": "27328c7e1052efa736d729c5a2ec396942abeda4",
-  "purpose": "Keep-a-Changelog formatted record of all notable changes to ai-dev-envbuild, organized by semver version with Added/Changed sections; current stable is 1.2.0.",
+  "sha1": "3697ebbb2b9d398f75af81baa4a2589fa875aa3c",
+  "purpose": "Keep-a-Changelog formatted record of all notable changes to ai-dev-envbuild, organized by semver version with Added/Changed sections; current stable is 1.3.1.",
   "exports": [],
   "imports": [],
   "called_by": [],

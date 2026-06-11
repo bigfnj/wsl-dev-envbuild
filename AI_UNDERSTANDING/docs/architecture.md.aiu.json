@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "path": "docs/architecture.md",
-  "sha1": "103c6fc6afb5b632adbd13f8811abef66a614570",
+  "sha1": "4b27fa7c4546ac72a7e5fd1a965735487d3af753",
   "purpose": "Authoritative design document for ai-dev-envbuild; defines the layered tool-ownership model, global-vs-project-local dependency rules, folder structure, idempotency strategy, WSL filesystem guidance, GPU isolation policy, and GUI tool recommendations that all modules must follow.",
   "exports": [],
   "imports": [],

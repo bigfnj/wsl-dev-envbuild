@@ -73,16 +73,24 @@ The repo (this sub-project):
 ```text
 ai-dev-envbuild/
   bootstrap.sh            entry point — runs install groups in order
+  VERSION                 semver stamp (read by devtools; written to env-version)
+  CHANGELOG.md            Keep-a-Changelog history
   lib/
-    common.sh             shared helpers: logging, has(), apt_install(), backup()
+    common.sh             shared helpers: logging, has(), apt_install(), backup(),
+                          ensure_block(), write_agent_discovery(), manifest_add()
   modules/                one file per install group (sourced by bootstrap.sh)
     core.sh  python.sh  node.sh  languages.sh  reverse.sh
-    data.sh  docs.sh  image.sh  containers.sh
+    data.sh  docs.sh  image.sh  containers.sh  mcp.sh
     optional-heavy.sh  optional-gpu.sh
+  mcp-server/             devenv MCP server (Node) — exposes manifest tools as MCP
+    index.js  denylist.json  package.json
   manifest/
     tools.json            machine-readable inventory (the source of truth)
   bin/
-    devtools              report / check / doctor — agent + human discovery
+    devtools              report / check / doctor / outdated — agent + human discovery
+    smoke-test            exercises the toolchain end-to-end (the build gate)
+  hooks/
+    pre-commit            runs devtools check; blocks the commit on manifest drift
   docs/
     architecture.md       this file
     wsl-filesystem.md     Windows/WSL boundary guidance

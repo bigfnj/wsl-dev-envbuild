@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "path": "README.md",
-  "sha1": "1955f0d99cab97922f71829a22bea794b3568942",
+  "sha1": "e2b2a852713a66b9f05615df25e020e1d0e3f1ea",
   "purpose": "Human-facing landing page for ai-dev-envbuild; describes the project as a reproducible Debian/Ubuntu/WSL2 dev environment, documents all install groups, devtools subcommands, directory layout, key conventions, and the add-a-tool workflow.",
   "exports": [],
   "imports": [],

@@ -61,6 +61,7 @@ After bootstrap, `devtools` is on your PATH (read-only; it never installs):
 devtools report   # human-readable inventory, grouped by install group
 devtools check    # verify every manifest tool is present (drift detection)
 devtools doctor   # PATH, shellrc, runtimes, docker daemon health
+devtools outdated # check for newer versions (apt/pipx/rustup/npm + GitHub releases)
 ```
 
 The inventory lives in [`manifest/tools.json`](manifest/tools.json) — the source
@@ -85,9 +86,12 @@ This repo:
 ```text
 bootstrap.sh         entry point
 lib/common.sh        shared helpers (has, apt_install, pipx_install, npm_global, …)
-modules/*.sh         one file per install group
+modules/*.sh         one file per install group (core … containers, mcp, optional-*)
+mcp-server/          devenv MCP server — exposes manifest tools to agents
 manifest/tools.json  agent-discoverable inventory
-bin/devtools         report / check / doctor
+bin/devtools         report / check / doctor / outdated
+bin/smoke-test       end-to-end toolchain gate
+hooks/pre-commit     blocks commits on manifest drift
 docs/                architecture, agent-rules, wsl-filesystem
 ```
 
@@ -136,7 +140,7 @@ The repo carries a [`VERSION`](VERSION) file (semver). Every `bootstrap.sh` run
 stamps the installed version and date into `~/tools/env-version`:
 
 ```text
-1.1.0  2026-06-05
+1.3.1  2026-06-10
 ```
 
 `devtools report` shows the installed version at the top. `devtools doctor`
